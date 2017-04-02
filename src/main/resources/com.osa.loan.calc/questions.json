@@ -1,0 +1,19 @@
+{
+  "wartosc-nieruchomosci": "Wartość nieruchomości (zł):",
+  "powierzchnia-nieruchomości": "Powierznia nieruchomości (m2):",
+
+  "kwota-kredytu": "Kwota kredytu (zł):",
+  "okres-kredytu": "Okres kredytu (miesiące):",
+  "waluta": "Waluta:",
+  "oprocentowanie": "Oprocentowanie:",
+
+  "data-urodzenia": "Data urodzenia (dd.MM.yyyy)",
+  "stan-cywilny": "Stan cywilny:",
+  "dzieci": "Dzieci (ilość):",
+
+  "mieszkanie-oplata": "Opłata za mieszkanie (zł):",
+  "koszt-utrzymania": "Koszt utrzymania (zł):",
+  "skladki-ubezbieczeniowe": "Składki ubezpieczeniowe (zł):",
+  "inne-kredyty": "Raty innych kredytów (zł):",
+  "pozostale-oplaty": "Pozostałe koszta (zł):"
+}
