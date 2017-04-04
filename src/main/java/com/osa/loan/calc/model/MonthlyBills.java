@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class MonthlyBills {
 
-    private long estate;
-    private long living;
-    private long insurance;
-    private long otherLoans;
-    private long others;
+    private Double estate;
+    private Double living;
+    private Double insurance;
+    private Double otherLoans;
+    private Double others;
 }

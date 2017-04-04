@@ -10,6 +10,7 @@ public class Person {
     private LocalDate birthDay;
     private boolean married;
     private int children;
+    private Double monthlySalary;
     private Loan loan;
     private MonthlyBills bills;
 }

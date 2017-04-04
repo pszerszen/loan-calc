@@ -1,0 +1,49 @@
+package com.osa.loan.calc;
+
+import com.osa.loan.calc.model.*;
+import java.math.BigDecimal;
+
+dialect  "java"
+
+global BigDecimal totalPayments;
+
+function void addToTotalPayments(Double payment) {
+    totalPayments = totalPayments.add(BigDecimal.valueOf(payment));
+}
+
+// 1
+rule "Opłaty za mieszkanie."
+    when
+        $bills : MonthlyBills(estate > 0)
+    then
+        addToTotalPayments($bills.getEstate());
+end
+
+rule "Koszty utrzymania."
+    when
+        $bills : MonthlyBills(living > 0)
+    then
+        addToTotalPayments($bills.getLiving());
+end
+
+rule "Składki ubezpieczeniowe."
+    when
+        $bills : MonthlyBills(insurance > 0)
+    then
+        addToTotalPayments($bills.getInsurance());
+end
+
+rule "Inne kredyty."
+    when
+        $bills : MonthlyBills(otherLoans > 0)
+    then
+        addToTotalPayments($bills.getOtherLoans());
+end
+
+// 5
+rule "Pozostałe koszta."
+    when
+        $bills : MonthlyBills(others > 0)
+    then
+        addToTotalPayments($bills.getOthers());
+end
