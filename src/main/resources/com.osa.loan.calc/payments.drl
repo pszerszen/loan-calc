@@ -6,44 +6,89 @@ import java.math.BigDecimal;
 dialect  "java"
 
 global BigDecimal totalPayments;
+global Utils utils;
+
+global Results results;
 
 function void addToTotalPayments(Double payment) {
     totalPayments = totalPayments.add(BigDecimal.valueOf(payment));
 }
 
-// 1
-rule "Opłaty za mieszkanie."
+rule "1: Opłaty za mieszkanie."
     when
         $bills : MonthlyBills(estate > 0)
     then
         addToTotalPayments($bills.getEstate());
 end
 
-rule "Koszty utrzymania."
+rule "2: Koszty utrzymania."
     when
         $bills : MonthlyBills(living > 0)
     then
         addToTotalPayments($bills.getLiving());
 end
 
-rule "Składki ubezpieczeniowe."
+rule "3: Składki ubezpieczeniowe."
     when
         $bills : MonthlyBills(insurance > 0)
     then
         addToTotalPayments($bills.getInsurance());
 end
 
-rule "Inne kredyty."
+rule "4: Inne kredyty."
     when
         $bills : MonthlyBills(otherLoans > 0)
     then
         addToTotalPayments($bills.getOtherLoans());
 end
 
-// 5
-rule "Pozostałe koszta."
+rule "5: Pozostałe koszta."
     when
         $bills : MonthlyBills(others > 0)
     then
         addToTotalPayments($bills.getOthers());
+end
+
+rule "6: Klient pracujący"
+    when
+        $person : Person(monthlySalary > 0)
+    then
+        results.setUnemployed(false);
+end
+
+rule "7: Klient bezrobotny"
+    when
+        $person : Person(monthlySalary == 0)
+    then
+        results.setUnemployed(true);
+end
+
+rule "8: Klient nie wypłacalny"
+    when
+        $person : Person(monthlySalary < totalPayments.doubleValue())
+    then
+        results.setAbleToPayBills(false);
+end
+
+rule "9: Klient wypłacalny"
+    when
+        $person : Person(monthlySalary >= totalPayments.doubleValue())
+    then
+        results.setAbleToPayBills(true);
+end
+
+rule "10: Klient nie jest w stanie opłacić rat"
+    when
+        $loan : Loan(monthlyLoanInstallment > 0)
+        $person : Person(monthlySalary < (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
+    then
+        results.setAbleToPayInstallments(false);
+end
+
+rule "11: Klient jest w stanie opłacić raty"
+    when
+        $loan : Loan(monthlyLoanInstallment > 0)
+        $person : Person(monthlySalary >= (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
+    then
+        results.setAbleToPayInstallments(false);
 end

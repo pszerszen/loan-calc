@@ -9,4 +9,6 @@ public class Loan {
     private int period;
     private String currency;
     private double percentage;
+
+    private double monthlyLoanInstallment;
 }
