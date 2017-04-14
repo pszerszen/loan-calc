@@ -57,7 +57,7 @@ rule "6: Klient pracujący"
         $person : Person(monthlySalary > 0)
         $results : Results()
     then
-        modify($results){ setUnemployed(false)};
+        modify($results){ setUnemployed(false) };
 end
 
 rule "7: Klient bezrobotny"
@@ -65,7 +65,7 @@ rule "7: Klient bezrobotny"
         $person : Person(monthlySalary == 0)
         $results : Results()
     then
-        modify($results){ setUnemployed(true)};
+        modify($results){ setUnemployed(true) };
 end
 
 rule "8: Małżonka pracująca"
@@ -73,7 +73,7 @@ rule "8: Małżonka pracująca"
         $person : Person(married == true, partnerMonthlySalary > 0)
         $results : Results()
     then
-        modify($results){ setPartnerUnemployed(false)};
+        modify($results){ setPartnerUnemployed(false) };
 end
 
 rule "9: Małżonka bezrobotna"
@@ -81,7 +81,7 @@ rule "9: Małżonka bezrobotna"
         $person : Person(married == true, partnerMonthlySalary == 0)
         $results : Results()
     then
-        modify($results){ setPartnerUnemployed(true)};
+        modify($results){ setPartnerUnemployed(true) };
 end
 
 rule "10: Klient nie wypłacalny"
@@ -89,7 +89,7 @@ rule "10: Klient nie wypłacalny"
         $person : Person(monthlySalary < totalPayments.doubleValue())
         $results : Results()
     then
-        modify($results){ setAbleToPayBills(false)};
+        modify($results){ setAbleToPayBills(false) };
 end
 
 rule "11: Klient wypłacalny"
@@ -97,7 +97,7 @@ rule "11: Klient wypłacalny"
         $person : Person(monthlySalary >= totalPayments.doubleValue())
         $results : Results()
     then
-        modify($results){ setAbleToPayBills(true)};
+        modify($results){ setAbleToPayBills(true) };
 end
 
 rule "12: Klient z małżonkiem nie wypłacalni"
@@ -105,7 +105,7 @@ rule "12: Klient z małżonkiem nie wypłacalni"
         $person : Person(monthlySalary + partnerMonthlySalary < totalPayments.doubleValue())
         $results : Results()
     then
-        modify($results){ setAbleToPayBills(false)};
+        modify($results){ setAbleToPayBills(false) };
 end
 
 rule "13: Klient z małżonkiem wypłacalni"
@@ -113,7 +113,7 @@ rule "13: Klient z małżonkiem wypłacalni"
         $person : Person(monthlySalary + partnerMonthlySalary >= totalPayments.doubleValue())
         $results : Results()
     then
-        modify($results){ setAbleToPayBills(true)};
+        modify($results){ setAbleToPayBills(true) };
 end
 
 rule "14: Klient nie jest w stanie sam opłacać rat"
@@ -122,7 +122,7 @@ rule "14: Klient nie jest w stanie sam opłacać rat"
         $person : Person(monthlySalary < (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
         $results : Results()
     then
-        modify($results){ setAbleToPayInstallments(false)};
+        modify($results){ setAbleToPayInstallments(false) };
 end
 
 rule "15: Klient jest w stanie sam opłacać rat"
@@ -131,7 +131,7 @@ rule "15: Klient jest w stanie sam opłacać rat"
         $person : Person(monthlySalary >= (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
         $results : Results()
     then
-        modify($results){ setAbleToPayInstallments(false)};
+        modify($results){ setAbleToPayInstallments(false) };
 end
 
 rule "16: Klient z małżonkiem nie jest w stanie opłacać rat"
@@ -140,7 +140,7 @@ rule "16: Klient z małżonkiem nie jest w stanie opłacać rat"
         $person : Person(married == true, monthlySalary + partnerMonthlySalary < (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
         $results : Results()
     then
-        modify($results){ setAbleToPayInstallmentsWithPartner(false)};
+        modify($results){ setAbleToPayInstallmentsWithPartner(false) };
 end
 
 rule "17: Klient z małżonkiem jest w stanie opłacać rat"
@@ -149,5 +149,5 @@ rule "17: Klient z małżonkiem jest w stanie opłacać rat"
         $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
         $results : Results()
     then
-        modify($results){ setAbleToPayInstallmentsWithPartner(false)};
+        modify($results){ setAbleToPayInstallmentsWithPartner(false) };
 end

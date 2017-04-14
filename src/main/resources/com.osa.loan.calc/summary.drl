@@ -1,0 +1,15 @@
+package com.osa.loan.calc;
+import com.osa.loan.calc.model.*;
+import java.util.*;
+import java.time.*;
+
+dialect  "java"
+
+global Boolean verdict;
+
+rule "34: Klient wystarczająco stary"
+    when
+        $results : Results(oldEnough == false)
+    then
+        verdict = false;
+end

@@ -16,6 +16,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 
@@ -25,8 +26,9 @@ import java.util.Map;
 
 @Slf4j
 @Configuration
-@ComponentScan(basePackageClasses = Application.class)
 @EnableConfigurationProperties
+@ComponentScan(basePackageClasses = Application.class)
+@PropertySource(value = "classpath:application.properties")
 public class Application {
 
     @Value("${drools.files}")
