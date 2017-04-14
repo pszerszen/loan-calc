@@ -8,9 +8,11 @@
   "oprocentowanie": "Oprocentowanie:",
 
   "data-urodzenia": "Data urodzenia (dd.MM.yyyy)",
+  "data-urodzenia-malzonka": "Data urodzenia małżonka(ki) (dd.MM.yyyy)",
   "stan-cywilny": "Stan cywilny:",
   "dzieci": "Dzieci (ilość):",
-  "pensja": "Miesięczne wynagrodzenie netto (zł) (z małżonkiem, jeśli kredyt jest wspólny):",
+  "pensja": "Miesięczne wynagrodzenie netto (zł):",
+  "pensja-malzonka": "Miesięczne wynagrodzenie netto małżonka(ki) (zł) :",
 
   "mieszkanie-oplata": "Opłata za mieszkanie (zł):",
   "koszt-utrzymania": "Koszt utrzymania (zł):",

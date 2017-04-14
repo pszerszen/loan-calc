@@ -8,9 +8,13 @@ import java.time.LocalDate;
 public class Person {
 
     private LocalDate birthDay;
-    private boolean married;
-    private int children;
     private Double monthlySalary;
+    private int children;
+    private boolean married;
+
+    private LocalDate partnerBirthDay;
+    private Double partnerMonthlySalary;
+
     private Loan loan;
     private MonthlyBills bills;
 }

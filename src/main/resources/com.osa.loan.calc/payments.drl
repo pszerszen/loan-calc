@@ -77,7 +77,21 @@ rule "9: Klient wypłacalny"
         results.setAbleToPayBills(true);
 end
 
-rule "10: Klient nie jest w stanie opłacić rat"
+rule "9: Klient z małżonkiem nie wypłacalni"
+    when
+        $person : Person(monthlySalary + partnerMonthlySalary < totalPayments.doubleValue())
+    then
+        results.setAbleToPayBills(false);
+end
+
+rule "10: Klient z małżonkiem wypłacalni"
+    when
+        $person : Person(monthlySalary + partnerMonthlySalary >= totalPayments.doubleValue())
+    then
+        results.setAbleToPayBills(true);
+end
+
+rule "11: Klient nie jest w stanie sam opłacać rat"
     when
         $loan : Loan(monthlyLoanInstallment > 0)
         $person : Person(monthlySalary < (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
@@ -85,10 +99,26 @@ rule "10: Klient nie jest w stanie opłacić rat"
         results.setAbleToPayInstallments(false);
 end
 
-rule "11: Klient jest w stanie opłacić raty"
+rule "12: Klient jest w stanie sam opłacać rat"
     when
         $loan : Loan(monthlyLoanInstallment > 0)
         $person : Person(monthlySalary >= (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
     then
         results.setAbleToPayInstallments(false);
+end
+
+rule "13: Klient z małżonkiem nie jest w stanie opłacać rat"
+    when
+        $loan : Loan(monthlyLoanInstallment > 0)
+        $person : Person(married == true, monthlySalary + partnerMonthlySalary < (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
+    then
+        results.setAbleToPayInstallmentsWithPartner(false);
+end
+
+rule "14: Klient z małżonkiem jest w stanie opłacać rat"
+    when
+        $loan : Loan(monthlyLoanInstallment > 0)
+        $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (totalPayments.doubleValue() + $loan.getMonthlyLoanInstallment()))
+    then
+        results.setAbleToPayInstallmentsWithPartner(false);
 end
