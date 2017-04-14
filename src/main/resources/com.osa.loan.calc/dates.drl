@@ -7,103 +7,103 @@ global Utils utils;
 
 global Results results;
 
-rule "15: Is client not old enough"
+rule "15: Klient niepełnoletni"
     when
         $person : Person(utils.getAgeInYears(birthDay) < 18)
     then
         results.setOldEnough(false);
 end
 
-rule "16: Is client old enough"
+rule "16: Klient pełnoletni"
     when
         $person : Person(utils.getAgeInYears(birthDay) >= 18)
     then
         results.setOldEnough(false);
 end
 
-rule "17: Is client too old"
+rule "17: Klient za stary"
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) >= utils.averageManAge)
     then
         results.setTooOld(true);
 end
 
-rule "18: Is client too old"
+rule "18: Klientka za stara"
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) >= utils.averageWomanAge)
     then
         results.setTooOld(true);
 end
 
-rule "19: Is client not too old"
+rule "19: Klient nie za stary"
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) < utils.averageManAge)
     then
         results.setTooOld(false);
 end
 
-rule "20: Is client not too old"
+rule "20: Klientka nie za stara"
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) < utils.averageWomanAge)
     then
         results.setTooOld(false);
 end
 
-rule "21: Is client partner too old"
+rule "21: Małżonka klienta za stara"
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) >= utils.averageWomanAge)
     then
         results.setTooOld(true);
 end
 
-rule "22: Is client partner too old"
+rule "22: Małżonek klientki za stary"
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) >= utils.averageManAge)
     then
         results.setTooOld(true);
 end
 
-rule "23: Is client partner not too old"
+rule "23: Małżonka klienta nie za stara"
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) < utils.averageWomanAge)
     then
         results.setTooOld(false);
 end
 
-rule "24: Is client partner not too old"
+rule "24: Małżonek klientki nie za stary"
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) < utils.averageManAge)
     then
         results.setTooOld(false);
 end
 
-rule "25: Client won't be able to pay all installments"
+rule "25: Klient nie będzie z stanie spłacić wszystkich rat"
     when
-        $loan : Loan(period > 0)
+        $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) < $loan.period)
     then
         results.setWillClientLiveLongEnough(false);
 end
 
-rule "26: Client will be able to pay all installments"
+rule "26: Klient będzie w stanie spłacić wszystkie raty"
     when
-        $loan : Loan(period > 0)
+        $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) >= $loan.period)
     then
         results.setWillClientLiveLongEnough(true);
 end
 
-rule "27: Client's partner won't be able to pay all installments"
+rule "27: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
     when
-        $loan : Loan(period > 0)
+        $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < $loan.period)
     then
         results.setWillClientsPartnerLiveLongEnough(false);
 end
 
-rule "28: Client's partner will be able to pay all installments"
+rule "28: Małżoka klienta będzie w stanie spłacić wszystkie raty"
     when
-        $loan : Loan(period > 0)
+        $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= $loan.period)
     then
         results.setWillClientsPartnerLiveLongEnough(true);
