@@ -6,80 +6,79 @@ import java.time.LocalDate;
 dialect  "java"
 
 global Utils utils;
-
 global Results results;
 
-rule "15: Klient niepełnoletni"
+rule "18: Klient niepełnoletni"
     when
         $person : Person(utils.getAgeInYears(birthDay) < 18)
     then
         results.setOldEnough(false);
 end
 
-rule "16: Klient pełnoletni"
+rule "19: Klient pełnoletni"
     when
         $person : Person(utils.getAgeInYears(birthDay) >= 18)
     then
         results.setOldEnough(false);
 end
 
-rule "17: Klient za stary"
+rule "20: Klient za stary"
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) >= utils.averageManAge)
     then
         results.setTooOld(true);
 end
 
-rule "18: Klientka za stara"
+rule "21: Klientka za stara"
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) >= utils.averageWomanAge)
     then
         results.setTooOld(true);
 end
 
-rule "19: Klient nie za stary"
+rule "22: Klient nie za stary"
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) < utils.averageManAge)
     then
         results.setTooOld(false);
 end
 
-rule "20: Klientka nie za stara"
+rule "23: Klientka nie za stara"
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) < utils.averageWomanAge)
     then
         results.setTooOld(false);
 end
 
-rule "21: Małżonka klienta za stara"
+rule "24: Małżonka klienta za stara"
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) >= utils.averageWomanAge)
     then
         results.setTooOld(true);
 end
 
-rule "22: Małżonek klientki za stary"
+rule "25: Małżonek klientki za stary"
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) >= utils.averageManAge)
     then
         results.setTooOld(true);
 end
 
-rule "23: Małżonka klienta nie za stara"
+rule "26: Małżonka klienta nie za stara"
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) < utils.averageWomanAge)
     then
         results.setTooOld(false);
 end
 
-rule "24: Małżonek klientki nie za stary"
+rule "27: Małżonek klientki nie za stary"
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) < utils.averageManAge)
     then
         results.setTooOld(false);
 end
 
-rule "25: Klient nie będzie z stanie spłacić wszystkich rat"
+rule "28: Klient nie będzie z stanie spłacić wszystkich rat"
     when
         $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) < $loan.period)
@@ -87,7 +86,7 @@ rule "25: Klient nie będzie z stanie spłacić wszystkich rat"
         results.setWillClientLiveLongEnough(false);
 end
 
-rule "26: Klient będzie w stanie spłacić wszystkie raty"
+rule "29: Klient będzie w stanie spłacić wszystkie raty"
     when
         $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) >= $loan.period)
@@ -95,7 +94,7 @@ rule "26: Klient będzie w stanie spłacić wszystkie raty"
         results.setWillClientLiveLongEnough(true);
 end
 
-rule "27: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
+rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
     when
         $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < $loan.period)
@@ -103,7 +102,7 @@ rule "27: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
         results.setWillClientsPartnerLiveLongEnough(false);
 end
 
-rule "28: Małżoka klienta będzie w stanie spłacić wszystkie raty"
+rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
     when
         $loan : Loan(period > 0) from $person.loan
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= $loan.period)
@@ -111,7 +110,7 @@ rule "28: Małżoka klienta będzie w stanie spłacić wszystkie raty"
         results.setWillClientsPartnerLiveLongEnough(true);
 end
 
-rule "29: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci kilenta"
+rule "32: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci kilenta"
     when
         $person : Person(children > 0)
         $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.birthDay, $person.man, $childBirthday) == true) from $person.childrenBirthDays
@@ -119,7 +118,7 @@ rule "29: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bez
         results.setChildCanCarryOnAfterClient(true);
 end
 
-rule "29: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci małżonki kilenta"
+rule "33: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci małżonki kilenta"
     when
         $person : Person(children > 0)
         $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.partnerBirthDay, !$person.man, $childBirthday) == true) from $person.childrenBirthDays

@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class Results {
     private boolean unemployed;
+    private boolean partnerUnemployed;
     private boolean ableToPayBills;
     private boolean ableToPayBillsWithPartner;
     private boolean ableToPayInstallments;

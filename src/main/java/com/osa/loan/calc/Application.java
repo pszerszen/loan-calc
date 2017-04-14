@@ -39,8 +39,7 @@ public class Application {
 
     @Bean
     public Type questionsType() {
-        return new TypeToken<Map<String, String>>() {
-        }.getType();
+        return new TypeToken<Map<String, String>>() {}.getType();
     }
 
     @Bean
