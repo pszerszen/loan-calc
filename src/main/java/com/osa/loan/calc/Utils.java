@@ -1,14 +1,31 @@
 package com.osa.loan.calc;
 
 import com.osa.loan.calc.model.Loan;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Period;
+
 import static java.lang.Math.pow;
+import static java.time.LocalDate.now;
 
 @Component
 public class Utils {
 
-    private static final int INSTALLMENT_COUNT_PER_CAPITALISATION = 12;
+    private static final int MONTHS_IN_YEAR = Month.values().length;
+    private static final int INSTALLMENT_COUNT_PER_CAPITALISATION = MONTHS_IN_YEAR;
+
+    @Getter
+    @Value("${average.age.man}")
+    private Double averageManAge;
+
+    @Getter
+    @Value("${average.age.woman}")
+    private Double averageWomanAge;
 
     /**
      * Wzór na obliczenie raty stałej kredytu:
@@ -30,5 +47,30 @@ public class Utils {
         double q = 1 + loan.getPercentage() / INSTALLMENT_COUNT_PER_CAPITALISATION;
 
         return loan.getPrice() * pow(q, loan.getPeriod()) * (q - 1) / pow(q, loan.getPeriod() - 1);
+    }
+
+    public double getAgeInYears(LocalDate birthDay) {
+        Period lifePeriod = Period.between(birthDay, now());
+
+        return lifePeriod.getMonths() / MONTHS_IN_YEAR;
+    }
+
+    public int getNumberOfInstallmentsThatCouldBePaid(LocalDate birthDay, boolean isMan) {
+        int currentAgeInMonths = getAgeInMonths(birthDay);
+        int averageAge = averageAgeInMonths(isMan);
+
+        LocalDate predictedDeathDate = birthDay.plusMonths(averageAge - currentAgeInMonths);
+        return Period.between(now(), predictedDeathDate)
+                .getMonths();
+    }
+
+    private int getAgeInMonths(LocalDate birthDay) {
+        return Period.between(birthDay, now()).getMonths();
+    }
+
+    private int averageAgeInMonths(boolean isMan) {
+        return BigDecimal.valueOf(isMan ? averageManAge : averageWomanAge)
+                .multiply(BigDecimal.valueOf(MONTHS_IN_YEAR))
+                .intValue();
     }
 }
