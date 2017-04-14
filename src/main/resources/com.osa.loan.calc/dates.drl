@@ -1,0 +1,51 @@
+package com.osa.loan.calc;
+import com.osa.loan.calc.model.*;
+
+dialect  "java"
+
+global Utils utils;
+
+global Results results;
+
+rule "15: Is client not old enough"
+    when
+        $person : Person(utils.getAgeInYears(birthDay) < 18)
+    then
+        results.setOldEnough(false);
+end
+
+rule "16: Is client old enough"
+    when
+        $person : Person(utils.getAgeInYears(birthDay) >= 18)
+    then
+        results.setOldEnough(false);
+end
+
+rule "17: Client won't be able to pay all installments"
+    when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) < 0)
+    then
+        results.setWillClientLiveLongEnough(false);
+end
+
+rule "18: Client will be able to pay all installments"
+    when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) >= 0)
+    then
+        results.setWillClientLiveLongEnough(true);
+end
+
+rule "19: Client's partner won't be able to pay all installments"
+    when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < 0)
+    then
+        results.setWillClientsPartnerLiveLongEnough(false);
+end
+
+rule "20: Client's partner will be able to pay all installments"
+    when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= 0)
+    then
+        results.setWillClientsPartnerLiveLongEnough(true);
+end
+

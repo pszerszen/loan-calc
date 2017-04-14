@@ -9,4 +9,8 @@ public class Results {
     private boolean ableToPayBillsWithPartner;
     private boolean ableToPayInstallments;
     private boolean ableToPayInstallmentsWithPartner;
+
+    private boolean oldEnough;
+    private boolean willClientLiveLongEnough;
+    private boolean willClientsPartnerLiveLongEnough;
 }

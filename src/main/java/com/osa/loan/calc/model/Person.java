@@ -4,6 +4,7 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class Person {
@@ -11,6 +12,7 @@ public class Person {
     private LocalDate birthDay;
     private Double monthlySalary;
     private int children;
+    private List<LocalDate> childrenBirthDays;
     private boolean married;
     private boolean man;
 
