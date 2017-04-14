@@ -11,6 +11,8 @@ public class Results {
     private boolean ableToPayInstallmentsWithPartner;
 
     private boolean oldEnough;
+    private boolean tooOld;
+    private boolean partnerTooOld;
     private boolean willClientLiveLongEnough;
     private boolean willClientsPartnerLiveLongEnough;
 }
