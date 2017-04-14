@@ -15,4 +15,7 @@ public class Results {
     private boolean partnerTooOld;
     private boolean willClientLiveLongEnough;
     private boolean willClientsPartnerLiveLongEnough;
+
+    private boolean childCanCarryOnAfterClient;
+    private boolean childCanCarryOnAfterPartner;
 }

@@ -1,6 +1,5 @@
 package com.osa.loan.calc;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -12,10 +11,13 @@ import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -27,6 +29,9 @@ import java.util.Map;
 @EnableConfigurationProperties
 public class Application {
 
+    @Value("${drools.files}")
+    private List<String> droolsFiles;
+
     @Bean
     public Gson gson() {
         return new GsonBuilder().setPrettyPrinting().create();
@@ -34,21 +39,22 @@ public class Application {
 
     @Bean
     public Type questionsType() {
-        return new TypeToken<Map<String, String>>() {}.getType();
+        return new TypeToken<Map<String, String>>() {
+        }.getType();
     }
 
     @Bean
-    public List<String> droolsFiles() {
-        return ImmutableList.of("payments");
+    public ConversionService conversionService() {
+        return new DefaultConversionService();
     }
 
-    @Bean
-    public StatefulKnowledgeSession readKnowledgeSession(List<String> droolsFiles) {
+    @Bean(destroyMethod = "destroy")
+    public StatefulKnowledgeSession readKnowledgeSession() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         droolsFiles.stream()
                 .map(name -> name.concat(".drl"))
                 .map(ResourceFactory::newClassPathResource)
-                .forEach(resource -> kbuilder.add(resource, ResourceType.DRL));
+                .forEachOrdered(resource -> kbuilder.add(resource, ResourceType.DRL));
         KnowledgeBuilderErrors errors = kbuilder.getErrors();
         if (!errors.isEmpty()) {
             errors.forEach(err -> log.error("drools error: \n" + err));

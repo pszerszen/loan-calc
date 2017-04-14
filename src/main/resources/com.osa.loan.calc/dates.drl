@@ -1,5 +1,7 @@
 package com.osa.loan.calc;
 import com.osa.loan.calc.model.*;
+import java.util.List;
+import java.time.LocalDate;
 
 dialect  "java"
 
@@ -109,3 +111,18 @@ rule "28: Małżoka klienta będzie w stanie spłacić wszystkie raty"
         results.setWillClientsPartnerLiveLongEnough(true);
 end
 
+rule "29: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci kilenta"
+    when
+        $person : Person(children > 0)
+        $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.birthDay, $person.man, $childBirthday) == true) from $person.childrenBirthDays
+    then
+        results.setChildCanCarryOnAfterClient(true);
+end
+
+rule "29: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci małżonki kilenta"
+    when
+        $person : Person(children > 0)
+        $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.partnerBirthDay, !$person.man, $childBirthday) == true) from $person.childrenBirthDays
+    then
+        results.setChildCanCarryOnAfterPartner(true);
+end

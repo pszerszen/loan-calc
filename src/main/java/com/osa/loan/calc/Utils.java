@@ -55,13 +55,22 @@ public class Utils {
         return lifePeriod.getMonths() / MONTHS_IN_YEAR;
     }
 
+    public boolean childWillBeAbleToCarryOn(LocalDate birthday, boolean isMan, LocalDate childBirthday) {
+        LocalDate predictedDeathDate = getPredictedDeathDate(birthday, isMan);
+
+        return Period.between(childBirthday, predictedDeathDate).getYears() >= 18;
+    }
+
     public int getNumberOfInstallmentsThatCouldBePaid(LocalDate birthDay, boolean isMan) {
+        return Period.between(now(), getPredictedDeathDate(birthDay, isMan))
+                .getMonths();
+    }
+
+    private LocalDate getPredictedDeathDate(final LocalDate birthDay, final boolean isMan) {
         int currentAgeInMonths = getAgeInMonths(birthDay);
         int averageAge = averageAgeInMonths(isMan);
 
-        LocalDate predictedDeathDate = birthDay.plusMonths(averageAge - currentAgeInMonths);
-        return Period.between(now(), predictedDeathDate)
-                .getMonths();
+        return birthDay.plusMonths(averageAge - currentAgeInMonths);
     }
 
     private int getAgeInMonths(LocalDate birthDay) {
