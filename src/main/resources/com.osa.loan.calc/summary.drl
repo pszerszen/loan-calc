@@ -94,3 +94,63 @@ rule "44: Bez małżonka nie da rady"
     then
         verdict.addWarning();
 end
+
+rule "45: Może sam płacić rachunki"
+    when
+        $results : Results(ableToPayBills == true)
+    then
+        verdict.addPositive();
+end
+
+rule "46: Może sam płacić raty"
+    when
+        $results : Results(ableToPayInstallments == true)
+    then
+        verdict.addPositive()
+            .addPositive();
+end
+
+rule "47: Spłaci całość"
+    when
+        $results : Results(willClientLiveLongEnough == true)
+    then
+        verdict.addPositive()
+            .addPositive();
+end
+
+rule "48: Spłaci całość z małżonkiem"
+    when
+        $results : Results(willClientLiveLongEnough == false, willClientsPartnerLiveLongEnough == true)
+    then
+        verdict.addPositive()
+            .addWarning();
+end
+
+rule "49: Dzieci mogą spłacić resztę"
+    when
+        $results : Results(willClientLiveLongEnough == false, childCanCarryOnAfterClient == true)
+    then
+        verdict.addPositive()
+            .addWarning()
+            .addWarning();
+end
+
+rule "50: Dzieci mogą spłacić resztę"
+    when
+        $results : Results(!willClientLiveLongEnough && !willClientsPartnerLiveLongEnough && (childCanCarryOnAfterClient || childCanCarryOnAfterPartner))
+    then
+        verdict.addPositive()
+            .addWarning()
+            .addWarning()
+            .addWarning();
+end
+
+rule "50: Nie można spłacić do końca"
+    when
+        $results : Results(willClientLiveLongEnough == false,
+                           willClientsPartnerLiveLongEnough == false,
+                           childCanCarryOnAfterClient == false,
+                           childCanCarryOnAfterPartner == false)
+    then
+        verdict.addCritical();
+end
