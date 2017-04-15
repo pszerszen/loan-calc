@@ -1,5 +1,6 @@
 package com.osa.loan.calc.service;
 
+import com.osa.loan.calc.model.Loan;
 import com.osa.loan.calc.model.Person;
 import com.osa.loan.calc.model.Results;
 import com.osa.loan.calc.model.Verdict;
@@ -8,8 +9,6 @@ import org.kie.internal.KnowledgeBase;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -22,11 +21,13 @@ public class LoanService {
         StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
         try {
 
+            Loan loan = person.getLoan();
+            loan.setMonthlyLoanInstallment(utils.countMonthlyLoanInstallment(loan));
             session.insert(person);
             session.insert(new Results());
 
             session.setGlobal("utils", utils);
-            session.setGlobal("totalPayments", BigDecimal.valueOf(0));
+            session.setGlobal("totalPayments", 0d);
             session.setGlobal("verdict", new Verdict());
 
             session.fireAllRules();

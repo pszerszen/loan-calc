@@ -19,7 +19,6 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 
@@ -31,12 +30,8 @@ import java.util.Map;
 @Configuration
 @EnableConfigurationProperties
 @ComponentScan(basePackageClasses = Application.class)
-@PropertySource(value = "classpath:application.properties")
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-
-    @Value("${drools.files}")
-    private List<String> droolsFiles;
 
     @Bean
     public Gson gson() {
@@ -53,15 +48,18 @@ public class Application extends SpringBootServletInitializer {
         return new DefaultConversionService();
     }
 
-    public KnowledgeBase readKnowledgeBase() {
+    @Bean
+    public KnowledgeBase readKnowledgeBase(@Value("${drools.files}") List<String> droolsFiles) {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         droolsFiles.stream()
                 .map(name -> name.concat(".drl"))
-                .map(ResourceFactory::newClassPathResource)
+                .map(getClass()::getResource)
+                .map(ResourceFactory::newUrlResource)
                 .forEachOrdered(resource -> kbuilder.add(resource, ResourceType.DRL));
         KnowledgeBuilderErrors errors = kbuilder.getErrors();
         if (!errors.isEmpty()) {
-            errors.forEach(err -> log.error("drools error: \n" + err));
+            log.error("Drools files contains {} errors:", errors.size());
+            errors.stream().forEachOrdered(err -> log.error("drools error: \n{}", err));
             throw new IllegalArgumentException("Could not parse knowledge.");
         }
         KnowledgeBase kbase = kbuilder.newKnowledgeBase();
