@@ -1,6 +1,7 @@
 package com.osa.loan.calc;
 
 import com.osa.loan.calc.model.*;
+import com.osa.loan.calc.service.*;
 import java.math.BigDecimal;
 
 dialect  "java"

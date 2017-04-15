@@ -1,4 +1,4 @@
-package com.osa.loan.calc;
+package com.osa.loan.calc.service;
 
 import com.osa.loan.calc.model.Loan;
 import lombok.Getter;

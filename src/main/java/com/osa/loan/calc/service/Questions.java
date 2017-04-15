@@ -1,4 +1,4 @@
-package com.osa.loan.calc;
+package com.osa.loan.calc.service;
 
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;

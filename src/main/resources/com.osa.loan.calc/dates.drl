@@ -1,5 +1,6 @@
 package com.osa.loan.calc;
 import com.osa.loan.calc.model.*;
+import com.osa.loan.calc.service.*;
 import java.util.List;
 import java.time.LocalDate;
 

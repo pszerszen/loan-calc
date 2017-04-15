@@ -10,9 +10,12 @@ import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
-import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +32,8 @@ import java.util.Map;
 @EnableConfigurationProperties
 @ComponentScan(basePackageClasses = Application.class)
 @PropertySource(value = "classpath:application.properties")
-public class Application {
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer {
 
     @Value("${drools.files}")
     private List<String> droolsFiles;
@@ -49,8 +53,7 @@ public class Application {
         return new DefaultConversionService();
     }
 
-    @Bean(destroyMethod = "destroy")
-    public StatefulKnowledgeSession readKnowledgeSession() {
+    public KnowledgeBase readKnowledgeBase() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         droolsFiles.stream()
                 .map(name -> name.concat(".drl"))
@@ -63,6 +66,15 @@ public class Application {
         }
         KnowledgeBase kbase = kbuilder.newKnowledgeBase();
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
-        return kbase.newStatefulKnowledgeSession();
+        return kbase;
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
+    }
+
+    public static void main(String... args) throws Exception {
+        SpringApplication.run(Application.class, args);
     }
 }
