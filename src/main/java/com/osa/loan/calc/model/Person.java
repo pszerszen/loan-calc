@@ -22,11 +22,12 @@ public class Person {
     private Loan loan;
     private MonthlyBills bills;
 
+    public void setMan(final boolean man) {
+        this.man = man;
+    }
+
     public void setMan(final String man) {
         this.man = StringUtils.equalsAnyIgnoreCase(man, "man", "M", "mężczyzna");
     }
 
-    public void setMan(final boolean man) {
-        this.man = man;
-    }
 }

@@ -90,8 +90,8 @@ end
 
 rule "28: Klient nie będzie z stanie spłacić wszystkich rat"
     when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) < loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) < $loan.period)
         $results : Results()
     then
         modify($results){ setWillClientLiveLongEnough(false) };
@@ -99,8 +99,8 @@ end
 
 rule "29: Klient będzie w stanie spłacić wszystkie raty"
     when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) >= loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) >= $loan.period)
         $results : Results()
     then
         modify($results){ setWillClientLiveLongEnough(true) };
@@ -108,8 +108,8 @@ end
 
 rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
     when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < $loan.period)
         $results : Results()
     then
         modify($results){ setWillClientsPartnerLiveLongEnough(false) };
@@ -117,8 +117,8 @@ end
 
 rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
     when
+        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= $loan.period)
         $results : Results()
     then
         modify($results){ setWillClientsPartnerLiveLongEnough(true) };

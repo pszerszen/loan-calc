@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.api.io.ResourceType;
 import org.kie.internal.KnowledgeBase;
+import org.kie.internal.KnowledgeBaseFactory;
 import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
@@ -62,7 +63,7 @@ public class Application extends SpringBootServletInitializer {
             errors.stream().forEachOrdered(err -> log.error("drools error: \n{}", err));
             throw new IllegalArgumentException("Could not parse knowledge.");
         }
-        KnowledgeBase kbase = kbuilder.newKnowledgeBase();
+        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
         return kbase;
     }

@@ -114,8 +114,8 @@ end
 
 rule "14: Klient nie jest w stanie sam opłacać rat"
     when
+        $person : Person(monthlySalary < (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $person : Person(monthlySalary < (totalPayments + $loan.monthlyLoanInstallment))
         $results : Results()
     then
         modify($results){ setAbleToPayInstallments(false) };
@@ -123,8 +123,8 @@ end
 
 rule "15: Klient jest w stanie sam opłacać rat"
     when
+        $person : Person(monthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $person : Person(monthlySalary >= (totalPayments + $loan.monthlyLoanInstallment))
         $results : Results()
     then
         modify($results){ setAbleToPayInstallments(false) };
@@ -132,8 +132,8 @@ end
 
 rule "16: Klient z małżonkiem nie jest w stanie opłacać rat"
     when
+        $person : Person(married == true, monthlySalary + partnerMonthlySalary < (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $person : Person(married == true, monthlySalary + partnerMonthlySalary < (totalPayments + $loan.monthlyLoanInstallment))
         $results : Results()
     then
         modify($results){ setAbleToPayInstallmentsWithPartner(false) };
@@ -141,8 +141,8 @@ end
 
 rule "17: Klient z małżonkiem jest w stanie opłacać rat"
     when
+        $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (totalPayments + $loan.monthlyLoanInstallment))
         $results : Results()
     then
         modify($results){ setAbleToPayInstallmentsWithPartner(false) };
