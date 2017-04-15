@@ -5,11 +5,92 @@ import java.time.*;
 
 dialect  "java"
 
-global Boolean verdict;
+global Verdict verdict;
 
-rule "34: Klient wystarczająco stary"
+rule "34: Klient nie wystarczająco stary"
     when
         $results : Results(oldEnough == false)
     then
-        verdict = false;
+        verdict.addCritical();
+end
+
+rule "35: Klient zbyt stary"
+    when
+        $person : Person(married == false)
+        $results : Results(tooOld == true)
+    then
+        verdict.addCritical();
+end
+
+rule "36: Klient i małżonka zbyt starzy"
+    when
+        $person : Person(married == true, children == 0)
+        $results : Results(tooOld == true, partnerTooOld == true)
+    then
+        verdict.addCritical();
+end
+
+rule "37: Klient bez dochodów"
+    when
+        $person : Person(married == false)
+        $results: Results(unemployed == true)
+    then
+        verdict.addCritical();
+end
+
+rule "38: Klient bez dochodów"
+    when
+        $person : Person(married == true)
+        $results: Results(unemployed == true, partnerUnemployed == true)
+    then
+        verdict.addCritical();
+end
+
+rule "39: Nie starcza na rachunki"
+    when
+        $person : Person(married == false)
+        $results: Results(ableToPayBills == false)
+    then
+        verdict.addCritical();
+end
+
+rule "40: Nie starcza na rachunki"
+    when
+        $person : Person(married == true)
+        $results: Results(ableToPayBills == false, ableToPayBillsWithPartner == false)
+    then
+        verdict.addCritical();
+end
+
+rule "41: Nie starcza na raty"
+    when
+        $person : Person(married == false)
+        $results: Results(ableToPayBills == true, ableToPayInstallments == false)
+    then
+        verdict.addCritical();
+end
+
+rule "42: Nie starcza na raty"
+    when
+        $person : Person(married == true)
+        $results: Results(ableToPayBillsWithPartner == true, ableToPayInstallments == false, ableToPayInstallmentsWithPartner == false)
+    then
+        verdict.addCritical();
+end
+
+rule "43: Bez małżonka nie da rady"
+    when
+        $person : Person(married == true)
+        $results : Results(ableToPayBills == false, ableToPayBillsWithPartner == true)
+    then
+        verdict.addWarning()
+            .addWarning();
+end
+
+rule "44: Bez małżonka nie da rady"
+    when
+        $person : Person(married == true)
+        $results : Results(ableToPayBills == true, ableToPayInstallments == false, ableToPayInstallmentsWithPartner == true)
+    then
+        verdict.addWarning();
 end
