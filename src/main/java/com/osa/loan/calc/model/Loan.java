@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class Loan {
 
-    private double price;
-    private int period;
+    private Double price;
+    private Integer period;
     private String currency;
-    private double percentage;
+    private Double percentage;
 
     private double monthlyLoanInstallment;
 }

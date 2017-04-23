@@ -2,16 +2,17 @@
   "wartosc-nieruchomosci": "Wartość nieruchomości (zł):",
   "powierzchnia-nieruchomości": "Powierznia nieruchomości (m2):",
 
-  "kwota-kredytu": "Kwota kredytu (zł):",
+  "kwota-kredytu": "Kwota kredytu:",
   "okres-kredytu": "Okres kredytu (miesiące):",
   "waluta": "Waluta:",
   "oprocentowanie": "Oprocentowanie:",
 
-  "data-urodzenia": "Data urodzenia (dd.MM.yyyy)",
+  "data-urodzenia": "Data urodzenia (dd.MM.yyyy):",
   "plec": "Płeć:",
-  "data-urodzenia-malzonka": "Data urodzenia małżonka(ki) (dd.MM.yyyy)",
+  "data-urodzenia-malzonka": "Data urodzenia małżonka(ki) (dd.MM.yyyy):",
   "stan-cywilny": "Stan cywilny:",
   "dzieci": "Dzieci (ilość):",
+  "data-uredzenia-dziecka": "Daty urodzenia dzieci (dd.MM.yyyy):",
   "pensja": "Miesięczne wynagrodzenie netto (zł):",
   "pensja-malzonka": "Miesięczne wynagrodzenie netto małżonka(ki) (zł) :",
 

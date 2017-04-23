@@ -7,8 +7,10 @@
     <groupId>com.osa</groupId>
     <artifactId>loan-calc</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <searchSystem.version>latest-SNAPSHOT</searchSystem.version>
         <jacksonVersion>2.8.5</jacksonVersion>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -36,6 +38,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <version>${spring.boot.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- Tomcat embedded container-->
@@ -77,6 +84,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery-ui</artifactId>
+            <version>1.12.1</version>
         </dependency>
 
         <dependency>
