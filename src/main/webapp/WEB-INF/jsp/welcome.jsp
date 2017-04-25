@@ -45,8 +45,9 @@
     <input type="hidden" id="questionUrl" value="${questionUrl}"/>
     <div class="starter-template">
         <h1>Odpowiedz na pytania:</h1>
+        <c:url value="/count" var="formUrl"/>
         <%--@elvariable id="person" type="com.osa.loan.calc.model.Person"--%>
-        <f:form modelAttribute="person" method="post" action="/count">
+        <f:form modelAttribute="person" method="post" action="${formUrl}">
 
             <h2>Kredyt:</h2>
             <div class="form-group">
@@ -134,6 +135,7 @@
                 <f:label path="childrenBirthDays" data-question="data-uredzenia-dziecka"/>
                 <input id="childrenBirthDays-prototype" class="form-control hidden"/>
             </div>
+            <f:button id="submit" type="button" class="btn btn-success">Analizuj</f:button>
         </f:form>
     </div>
 

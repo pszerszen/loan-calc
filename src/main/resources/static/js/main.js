@@ -3,6 +3,7 @@ var Main = (function (out, $){
     
     var $childrenBirthDaysPrototype = $('#childrenBirthDays-prototype');
     var $childrenBirthDaysSection = $('#childrenBirthDays-section');
+    var $form = $('form');
     
     var triggers = {
         '#married': {
@@ -46,6 +47,23 @@ var Main = (function (out, $){
                 }
                 setUpChildrenDatePickers();
                 enableDatePicker($childrenBirthDaysSection.find('.date-picker'));
+            }
+        },
+        '#submit' : {
+            'click' : function () {
+                $.ajax({
+                    url: $form.attr('action'),
+                    dataType: 'json',
+                    type: 'POST',
+                    data: $form.serialize(),
+                    traditional: true,
+                    success: function (data){
+                        console.log(data);
+                    },
+                    error: function (xhr, status, error){
+                        alert(error)
+                    }
+                });
             }
         }
     };
