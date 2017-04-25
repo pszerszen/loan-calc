@@ -40,11 +40,12 @@
             <version>${spring.boot.version}</version>
             <optional>true</optional>
         </dependency>
-        <dependency>
+        <!--Causes troubles with setting up drools globals-->
+<!--        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
         <!-- Tomcat embedded container-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
