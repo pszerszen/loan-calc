@@ -198,7 +198,7 @@ no-loop true
 salience 32
     when
         $person : Person()
-        $loan : Loan(currency == "PLN") from $person.loan
+        $loan : Loan(currency == LoanCurrency.PLN) from $person.loan
     then
         verdict.addPositive();
 end
@@ -208,7 +208,7 @@ no-loop true
 salience 32
     when
         $person : Person()
-        $loan : Loan(currency == "PLN") from $person.loan
+        $loan : Loan(currency != LoanCurrency.PLN) from $person.loan
     then
         verdict.addWarning();
 end

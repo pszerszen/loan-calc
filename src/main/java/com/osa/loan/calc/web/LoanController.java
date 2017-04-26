@@ -1,6 +1,7 @@
 package com.osa.loan.calc.web;
 
 import com.google.common.collect.ImmutableList;
+import com.osa.loan.calc.model.LoanCurrency;
 import com.osa.loan.calc.model.Person;
 import com.osa.loan.calc.model.Verdict;
 import com.osa.loan.calc.service.LoanService;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.tuple.ImmutablePair.of;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
@@ -39,6 +42,11 @@ public class LoanController {
                 of("W separacji", false),
                 of("Wdowiec/Wdowa", false)
         );
+    }
+
+    @ModelAttribute("currencies")
+    public List<LoanCurrency> getCurrencies() {
+        return Arrays.stream(LoanCurrency.values()).collect(Collectors.toList());
     }
 
     @RequestMapping("/")

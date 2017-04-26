@@ -56,7 +56,8 @@
             </div>
             <div class="form-group">
                 <f:label path="loan.currency" data-question="waluta"/>
-                <f:input path="loan.currency" cssClass="form-control"/>
+                <%--@elvariable id="currencies" type="java.util.List"--%>
+                <f:select path="loan.currency" data-question="waluta" items="${currencies}" cssClass="form-control" />
             </div>
             <div class="form-group">
                 <f:label path="loan.period" data-question="okres-kredytu"/>

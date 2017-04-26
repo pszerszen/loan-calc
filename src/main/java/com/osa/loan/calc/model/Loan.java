@@ -7,7 +7,7 @@ public class Loan {
 
     private Double price;
     private Integer period;
-    private String currency;
+    private LoanCurrency currency;
     private Double percentage;
 
     private double monthlyLoanInstallment;
