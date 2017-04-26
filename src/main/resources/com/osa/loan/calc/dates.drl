@@ -11,7 +11,8 @@ global Logger log;
 global Utils utils;
 
 rule "18: Klient niepełnoletni"
-    no-loop true
+no-loop true
+salience 90
     when
         $person : Person(utils.getAgeInYears(birthDay) < 18)
         $results : Results(oldEnough == true)
@@ -20,16 +21,18 @@ rule "18: Klient niepełnoletni"
 end
 
 rule "19: Klient pełnoletni"
-    no-loop true
+no-loop true
+salience 90
     when
         $person : Person(utils.getAgeInYears(birthDay) >= 18)
-        $results : Results(oldEnough == true)
+        $results : Results(oldEnough == false)
     then
-        modify($results){ setOldEnough(false) };
+        modify($results){ setOldEnough(true) };
 end
 
 rule "20: Klient za stary"
-    no-loop true
+no-loop true
+salience 89
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) >= utils.averageManAge)
         $results : Results(tooOld == false)
@@ -38,7 +41,8 @@ rule "20: Klient za stary"
 end
 
 rule "21: Klientka za stara"
-    no-loop true
+no-loop true
+salience 89
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) >= utils.averageWomanAge)
         $results : Results(tooOld == false)
@@ -47,7 +51,8 @@ rule "21: Klientka za stara"
 end
 
 rule "22: Klient nie za stary"
-    no-loop true
+no-loop true
+salience 89
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) < utils.averageManAge)
         $results : Results(tooOld == true)
@@ -56,7 +61,8 @@ rule "22: Klient nie za stary"
 end
 
 rule "23: Klientka nie za stara"
-    no-loop true
+no-loop true
+salience 89
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) < utils.averageWomanAge)
         $results : Results(tooOld == true)
@@ -65,7 +71,8 @@ rule "23: Klientka nie za stara"
 end
 
 rule "24: Małżonka klienta za stara"
-    no-loop true
+no-loop true
+salience 88
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) >= utils.averageWomanAge)
         $results : Results(tooOld == false)
@@ -74,7 +81,8 @@ rule "24: Małżonka klienta za stara"
 end
 
 rule "25: Małżonek klientki za stary"
-    no-loop true
+no-loop true
+salience 88
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) >= utils.averageManAge)
         $results : Results(tooOld == false)
@@ -83,7 +91,8 @@ rule "25: Małżonek klientki za stary"
 end
 
 rule "26: Małżonka klienta nie za stara"
-    no-loop true
+no-loop true
+salience 88
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) < utils.averageWomanAge)
         $results : Results(tooOld == true)
@@ -92,7 +101,8 @@ rule "26: Małżonka klienta nie za stara"
 end
 
 rule "27: Małżonek klientki nie za stary"
-    no-loop true
+no-loop true
+salience 88
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) < utils.averageManAge)
         $results : Results(tooOld == true)
@@ -101,7 +111,8 @@ rule "27: Małżonek klientki nie za stary"
 end
 
 rule "28: Klient nie będzie z stanie spłacić wszystkich rat"
-    no-loop true
+no-loop true
+salience 87
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) < loan.period)
         $loan : Loan(period > 0) from $person.loan
@@ -111,7 +122,8 @@ rule "28: Klient nie będzie z stanie spłacić wszystkich rat"
 end
 
 rule "29: Klient będzie w stanie spłacić wszystkie raty"
-    no-loop true
+no-loop true
+salience 87
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) >= loan.period)
         $loan : Loan(period > 0) from $person.loan
@@ -121,7 +133,8 @@ rule "29: Klient będzie w stanie spłacić wszystkie raty"
 end
 
 rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
-    no-loop true
+no-loop true
+salience 86
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < loan.period)
         $loan : Loan(period > 0) from $person.loan
@@ -131,7 +144,8 @@ rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
 end
 
 rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
-    no-loop true
+no-loop true
+salience 86
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= loan.period)
         $loan : Loan(period > 0) from $person.loan
@@ -141,7 +155,8 @@ rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
 end
 
 rule "32: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci kilenta"
-    no-loop true
+no-loop true
+salience 85
     when
         $person : Person(children > 0)
         $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.birthDay, $person.man, $childBirthday) == true) from $person.childrenBirthDays
@@ -151,7 +166,8 @@ rule "32: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bez
 end
 
 rule "33: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci małżonki kilenta"
-    no-loop true
+no-loop true
+salience 84
     when
         $person : Person(children > 0)
         $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.partnerBirthDay, !$person.man, $childBirthday) == true) from $person.childrenBirthDays

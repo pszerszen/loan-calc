@@ -42,34 +42,4 @@ public class TrackingAgendaEventListener extends DefaultAgendaEventListener {
         log.debug(sb.toString());
     }
 
-    public boolean isRuleFired(String ruleName) {
-        for (Match a : matchList) {
-            if (a.getRule().getName().equals(ruleName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void reset() {
-        matchList.clear();
-    }
-
-    public final List<Match> getMatchList() {
-        return matchList;
-    }
-
-    public String matchsToString() {
-        if (matchList.size() == 0) {
-            return "No matchs occurred.";
-        } else {
-            StringBuilder sb = new StringBuilder("Matchs: ");
-            for (Match match : matchList) {
-                sb.append("\n  rule: ")
-                        .append(match.getRule().getName());
-            }
-            return sb.toString();
-        }
-    }
-
 }

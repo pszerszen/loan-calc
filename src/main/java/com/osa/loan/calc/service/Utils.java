@@ -52,7 +52,7 @@ public class Utils {
     public double getAgeInYears(LocalDate birthDay) {
         Period lifePeriod = Period.between(birthDay, now());
 
-        return lifePeriod.getMonths() / MONTHS_IN_YEAR;
+        return (lifePeriod.getYears() * MONTHS_IN_YEAR) + lifePeriod.getMonths();
     }
 
     public boolean childWillBeAbleToCarryOn(LocalDate birthday, boolean isMan, LocalDate childBirthday) {
@@ -62,8 +62,8 @@ public class Utils {
     }
 
     public int getNumberOfInstallmentsThatCouldBePaid(LocalDate birthDay, boolean isMan) {
-        return Period.between(now(), getPredictedDeathDate(birthDay, isMan))
-                .getMonths();
+        Period between = Period.between(now(), getPredictedDeathDate(birthDay, isMan));
+        return (between.getYears() * MONTHS_IN_YEAR) + between.getMonths();
     }
 
     private LocalDate getPredictedDeathDate(final LocalDate birthDay, final boolean isMan) {
@@ -74,7 +74,8 @@ public class Utils {
     }
 
     private int getAgeInMonths(LocalDate birthDay) {
-        return Period.between(birthDay, now()).getMonths();
+        Period between = Period.between(birthDay, now());
+        return (between.getYears() * MONTHS_IN_YEAR) + between.getMonths();
     }
 
     private int averageAgeInMonths(boolean isMan) {

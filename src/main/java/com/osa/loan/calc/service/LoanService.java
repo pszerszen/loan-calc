@@ -29,7 +29,6 @@ public class LoanService {
             session.insert(person);
             session.insert(new Results());
 
-            session.setGlobal("log", log);
             session.setGlobal("utils", utils);
             session.setGlobal("totalPayments", 0d);
             session.setGlobal("verdict", new Verdict());
