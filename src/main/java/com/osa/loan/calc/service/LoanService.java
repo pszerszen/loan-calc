@@ -18,11 +18,12 @@ public class LoanService {
 
     private final Utils utils;
     private final KnowledgeBase knowledgeBase;
+    private final TrackingAgendaEventListener trackingAgendaEventListener;
 
     public synchronized Verdict checkCreditworthiness(Person person) {
         StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
         try {
-
+            session.addEventListener(trackingAgendaEventListener);
             Loan loan = person.getLoan();
             loan.setMonthlyLoanInstallment(utils.countMonthlyLoanInstallment(loan));
             session.insert(person);

@@ -15,7 +15,6 @@ rule "34: Klient nie wystarczająco stary"
         $results : Results(oldEnough == false)
     then
         verdict.addCritical();
-        log.debug("rule 34");
 end
 
 rule "35: Klient zbyt stary"
@@ -25,7 +24,6 @@ rule "35: Klient zbyt stary"
         $results : Results(tooOld == true)
     then
         verdict.addCritical();
-        log.debug("rule 35");
 end
 
 rule "36: Klient i małżonka zbyt starzy"
@@ -35,7 +33,6 @@ rule "36: Klient i małżonka zbyt starzy"
         $results : Results(tooOld == true, partnerTooOld == true)
     then
         verdict.addCritical();
-        log.debug("rule 36");
 end
 
 rule "37: Klient bez dochodów"
@@ -45,7 +42,6 @@ rule "37: Klient bez dochodów"
         $results: Results(unemployed == true)
     then
         verdict.addCritical();
-        log.debug("rule 37");
 end
 
 rule "38: Klient bez dochodów"
@@ -55,7 +51,6 @@ rule "38: Klient bez dochodów"
         $results: Results(unemployed == true, partnerUnemployed == true)
     then
         verdict.addCritical();
-        log.debug("rule 38");
 end
 
 rule "39: Nie starcza na rachunki"
@@ -65,7 +60,6 @@ rule "39: Nie starcza na rachunki"
         $results: Results(ableToPayBills == false)
     then
         verdict.addCritical();
-        log.debug("rule 39");
 end
 
 rule "40: Nie starcza na rachunki"
@@ -75,7 +69,6 @@ rule "40: Nie starcza na rachunki"
         $results: Results(ableToPayBills == false, ableToPayBillsWithPartner == false)
     then
         verdict.addCritical();
-        log.debug("rule 40");
 end
 
 rule "41: Nie starcza na raty"
@@ -85,7 +78,6 @@ rule "41: Nie starcza na raty"
         $results: Results(ableToPayBills == true, ableToPayInstallments == false)
     then
         verdict.addCritical();
-        log.debug("rule 41");
 end
 
 rule "42: Nie starcza na raty"
@@ -95,7 +87,6 @@ rule "42: Nie starcza na raty"
         $results: Results(ableToPayBillsWithPartner == true, ableToPayInstallments == false, ableToPayInstallmentsWithPartner == false)
     then
         verdict.addCritical();
-        log.debug("rule 42");
 end
 
 rule "43: Bez małżonka nie da rady"
@@ -106,7 +97,6 @@ rule "43: Bez małżonka nie da rady"
     then
         verdict.addWarning()
             .addWarning();
-        log.debug("rule 43");
 end
 
 rule "44: Bez małżonka nie da rady"
@@ -116,7 +106,6 @@ rule "44: Bez małżonka nie da rady"
         $results : Results(ableToPayBills == true, ableToPayInstallments == false, ableToPayInstallmentsWithPartner == true)
     then
         verdict.addWarning();
-        log.debug("rule 44");
 end
 
 rule "45: Może sam płacić rachunki"
@@ -125,7 +114,6 @@ rule "45: Może sam płacić rachunki"
         $results : Results(ableToPayBills == true)
     then
         verdict.addPositive();
-        log.debug("rule 45");
 end
 
 rule "46: Może sam płacić raty"
@@ -135,7 +123,6 @@ rule "46: Może sam płacić raty"
     then
         verdict.addPositive()
             .addPositive();
-        log.debug("rule 46");
 end
 
 rule "47: Spłaci całość"
@@ -145,7 +132,6 @@ rule "47: Spłaci całość"
     then
         verdict.addPositive()
             .addPositive();
-        log.debug("rule 47");
 end
 
 rule "48: Spłaci całość z małżonkiem"
@@ -155,7 +141,6 @@ rule "48: Spłaci całość z małżonkiem"
     then
         verdict.addPositive()
             .addWarning();
-        log.debug("rule 48");
 end
 
 rule "49: Dzieci mogą spłacić resztę"
@@ -166,7 +151,6 @@ rule "49: Dzieci mogą spłacić resztę"
         verdict.addPositive()
             .addWarning()
             .addWarning();
-        log.debug("rule 49");
 end
 
 rule "50: Dzieci mogą spłacić resztę"
@@ -178,7 +162,6 @@ rule "50: Dzieci mogą spłacić resztę"
             .addWarning()
             .addWarning()
             .addWarning();
-        log.debug("rule 50");
 end
 
 rule "50: Nie można spłacić do końca"
@@ -190,5 +173,4 @@ rule "50: Nie można spłacić do końca"
                            childCanCarryOnAfterPartner == false)
     then
         verdict.addCritical();
-        log.debug("rule 51");
 end

@@ -17,7 +17,6 @@ rule "18: Klient niepełnoletni"
         $results : Results(oldEnough == true)
     then
         modify($results){ setOldEnough(false) };
-        log.debug("rule 18");
 end
 
 rule "19: Klient pełnoletni"
@@ -27,7 +26,6 @@ rule "19: Klient pełnoletni"
         $results : Results(oldEnough == true)
     then
         modify($results){ setOldEnough(false) };
-        log.debug("rule 19");
 end
 
 rule "20: Klient za stary"
@@ -37,7 +35,6 @@ rule "20: Klient za stary"
         $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
-        log.debug("rule 20");
 end
 
 rule "21: Klientka za stara"
@@ -47,7 +44,6 @@ rule "21: Klientka za stara"
         $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
-        log.debug("rule 21");
 end
 
 rule "22: Klient nie za stary"
@@ -57,7 +53,6 @@ rule "22: Klient nie za stary"
         $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
-        log.debug("rule 22");
 end
 
 rule "23: Klientka nie za stara"
@@ -67,7 +62,6 @@ rule "23: Klientka nie za stara"
         $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
-        log.debug("rule 23");
 end
 
 rule "24: Małżonka klienta za stara"
@@ -77,7 +71,6 @@ rule "24: Małżonka klienta za stara"
         $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
-        log.debug("rule 24");
 end
 
 rule "25: Małżonek klientki za stary"
@@ -87,7 +80,6 @@ rule "25: Małżonek klientki za stary"
         $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
-        log.debug("rule 25");
 end
 
 rule "26: Małżonka klienta nie za stara"
@@ -97,7 +89,6 @@ rule "26: Małżonka klienta nie za stara"
         $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
-        log.debug("rule 26");
 end
 
 rule "27: Małżonek klientki nie za stary"
@@ -107,7 +98,6 @@ rule "27: Małżonek klientki nie za stary"
         $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
-        log.debug("rule 27");
 end
 
 rule "28: Klient nie będzie z stanie spłacić wszystkich rat"
@@ -118,7 +108,6 @@ rule "28: Klient nie będzie z stanie spłacić wszystkich rat"
         $results : Results(willClientLiveLongEnough == true)
     then
         modify($results){ setWillClientLiveLongEnough(false) };
-        log.debug("rule 28");
 end
 
 rule "29: Klient będzie w stanie spłacić wszystkie raty"
@@ -129,7 +118,6 @@ rule "29: Klient będzie w stanie spłacić wszystkie raty"
         $results : Results(willClientLiveLongEnough == false)
     then
         modify($results){ setWillClientLiveLongEnough(true) };
-        log.debug("rule 29");
 end
 
 rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
@@ -140,7 +128,6 @@ rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
         $results : Results(willClientsPartnerLiveLongEnough == true)
     then
         modify($results){ setWillClientsPartnerLiveLongEnough(false) };
-        log.debug("rule 30");
 end
 
 rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
@@ -151,7 +138,6 @@ rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
         $results : Results(willClientsPartnerLiveLongEnough == false)
     then
         modify($results){ setWillClientsPartnerLiveLongEnough(true) };
-        log.debug("rule 31");
 end
 
 rule "32: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci kilenta"
@@ -162,7 +148,6 @@ rule "32: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bez
         $results : Results(childCanCarryOnAfterClient == false)
     then
         modify($results){ setChildCanCarryOnAfterClient(true) };
-        log.debug("rule 32");
 end
 
 rule "33: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci małżonki kilenta"
@@ -173,5 +158,4 @@ rule "33: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bez
         $results : Results(childCanCarryOnAfterPartner == false)
     then
         modify($results){ setChildCanCarryOnAfterPartner(true) };
-        log.debug("rule 33");
 end
