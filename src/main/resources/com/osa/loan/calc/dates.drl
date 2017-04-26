@@ -3,141 +3,175 @@ import com.osa.loan.calc.model.*;
 import com.osa.loan.calc.service.*;
 import java.util.List;
 import java.time.LocalDate;
+import org.slf4j.Logger;
 
 dialect  "java"
 
+global Logger log;
 global Utils utils;
 
 rule "18: Klient niepełnoletni"
+    no-loop true
     when
         $person : Person(utils.getAgeInYears(birthDay) < 18)
-        $results : Results()
+        $results : Results(oldEnough == true)
     then
         modify($results){ setOldEnough(false) };
+        log.debug("rule 18");
 end
 
 rule "19: Klient pełnoletni"
+    no-loop true
     when
         $person : Person(utils.getAgeInYears(birthDay) >= 18)
-        $results : Results()
+        $results : Results(oldEnough == true)
     then
         modify($results){ setOldEnough(false) };
+        log.debug("rule 19");
 end
 
 rule "20: Klient za stary"
+    no-loop true
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) >= utils.averageManAge)
-        $results : Results()
+        $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
+        log.debug("rule 20");
 end
 
 rule "21: Klientka za stara"
+    no-loop true
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) >= utils.averageWomanAge)
-        $results : Results()
+        $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
+        log.debug("rule 21");
 end
 
 rule "22: Klient nie za stary"
+    no-loop true
     when
         $person : Person(man == true, utils.getAgeInYears(birthDay) < utils.averageManAge)
-        $results : Results()
+        $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
+        log.debug("rule 22");
 end
 
 rule "23: Klientka nie za stara"
+    no-loop true
     when
         $person : Person(man == false, utils.getAgeInYears(birthDay) < utils.averageWomanAge)
-        $results : Results()
+        $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
+        log.debug("rule 23");
 end
 
 rule "24: Małżonka klienta za stara"
+    no-loop true
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) >= utils.averageWomanAge)
-        $results : Results()
+        $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
+        log.debug("rule 24");
 end
 
 rule "25: Małżonek klientki za stary"
+    no-loop true
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) >= utils.averageManAge)
-        $results : Results()
+        $results : Results(tooOld == false)
     then
         modify($results){ setTooOld(true) };
+        log.debug("rule 25");
 end
 
 rule "26: Małżonka klienta nie za stara"
+    no-loop true
     when
         $person : Person(married == true, man == true, utils.getAgeInYears(partnerBirthDay) < utils.averageWomanAge)
-        $results : Results()
+        $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
+        log.debug("rule 26");
 end
 
 rule "27: Małżonek klientki nie za stary"
+    no-loop true
     when
         $person : Person(married == true, man == false, utils.getAgeInYears(partnerBirthDay) < utils.averageManAge)
-        $results : Results()
+        $results : Results(tooOld == true)
     then
         modify($results){ setTooOld(false) };
+        log.debug("rule 27");
 end
 
 rule "28: Klient nie będzie z stanie spłacić wszystkich rat"
+    no-loop true
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) < loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $results : Results()
+        $results : Results(willClientLiveLongEnough == true)
     then
         modify($results){ setWillClientLiveLongEnough(false) };
+        log.debug("rule 28");
 end
 
 rule "29: Klient będzie w stanie spłacić wszystkie raty"
+    no-loop true
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(birthDay, man) >= loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $results : Results()
+        $results : Results(willClientLiveLongEnough == false)
     then
         modify($results){ setWillClientLiveLongEnough(true) };
+        log.debug("rule 29");
 end
 
 rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
+    no-loop true
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $results : Results()
+        $results : Results(willClientsPartnerLiveLongEnough == true)
     then
         modify($results){ setWillClientsPartnerLiveLongEnough(false) };
+        log.debug("rule 30");
 end
 
 rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
+    no-loop true
     when
         $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= loan.period)
         $loan : Loan(period > 0) from $person.loan
-        $results : Results()
+        $results : Results(willClientsPartnerLiveLongEnough == false)
     then
         modify($results){ setWillClientsPartnerLiveLongEnough(true) };
+        log.debug("rule 31");
 end
 
 rule "32: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci kilenta"
+    no-loop true
     when
         $person : Person(children > 0)
         $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.birthDay, $person.man, $childBirthday) == true) from $person.childrenBirthDays
-        $results : Results()
+        $results : Results(childCanCarryOnAfterClient == false)
     then
         modify($results){ setChildCanCarryOnAfterClient(true) };
+        log.debug("rule 32");
 end
 
 rule "33: Przynajmniej jedno z dzieci mogło kontynuować spłacania kredytu bezpośredio po śmierci małżonki kilenta"
+    no-loop true
     when
         $person : Person(children > 0)
         $childBirthday : LocalDate(utils.childWillBeAbleToCarryOn($person.partnerBirthDay, !$person.man, $childBirthday) == true) from $person.childrenBirthDays
-        $results : Results()
+        $results : Results(childCanCarryOnAfterPartner == false)
     then
         modify($results){ setChildCanCarryOnAfterPartner(true) };
+        log.debug("rule 33");
 end

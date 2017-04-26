@@ -2,148 +2,184 @@ package com.osa.loan.calc;
 
 import com.osa.loan.calc.model.*;
 import com.osa.loan.calc.service.*;
+import org.slf4j.Logger;
 
 dialect  "java"
 
+global Logger log;
 global Double totalPayments;
 global Utils utils;
 
 rule "1: Opłaty za mieszkanie."
+no-loop true
     when
         $person :Person()
         $bills : MonthlyBills(estate > 0) from $person.bills
     then
         totalPayments += $bills.getEstate();
+        log.debug("rule 1");
 end
 
 rule "2: Koszty utrzymania."
+no-loop true
     when
         $person :Person()
         $bills : MonthlyBills(living > 0) from $person.bills
     then
         totalPayments += $bills.getLiving();
+        log.debug("rule 2");
 end
 
 rule "3: Składki ubezpieczeniowe."
+no-loop true
     when
         $person :Person()
         $bills : MonthlyBills(insurance > 0) from $person.bills
     then
         totalPayments += $bills.getInsurance();
+        log.debug("rule 3");
 end
 
 rule "4: Inne kredyty."
+no-loop true
     when
         $person :Person()
         $bills : MonthlyBills(otherLoans > 0) from $person.bills
     then
         totalPayments += $bills.getOtherLoans();
+        log.debug("rule 4");
 end
 
 rule "5: Pozostałe koszta."
+no-loop true
     when
         $person :Person()
         $bills : MonthlyBills(others > 0) from $person.bills
     then
         totalPayments += $bills.getOthers();
+        log.debug("rule 5");
 end
 
 rule "6: Klient pracujący"
+no-loop true
     when
         $person : Person(monthlySalary > 0)
-        $results : Results()
+        $results : Results(unemployed == true)
     then
         modify($results){ setUnemployed(false) };
+        log.debug("rule 6");
 end
 
 rule "7: Klient bezrobotny"
+no-loop true
     when
         $person : Person(monthlySalary == 0)
-        $results : Results()
+        $results : Results(unemployed == false)
     then
         modify($results){ setUnemployed(true) };
+        log.debug("rule 7");
 end
 
 rule "8: Małżonka pracująca"
+no-loop true
     when
         $person : Person(married == true, partnerMonthlySalary > 0)
-        $results : Results()
+        $results : Results(partnerUnemployed == true)
     then
         modify($results){ setPartnerUnemployed(false) };
+        log.debug("rule 8");
 end
 
 rule "9: Małżonka bezrobotna"
+no-loop true
     when
         $person : Person(married == true, partnerMonthlySalary == 0)
-        $results : Results()
+        $results : Results(partnerUnemployed == false)
     then
         modify($results){ setPartnerUnemployed(true) };
+        log.debug("rule 9");
 end
 
 rule "10: Klient nie wypłacalny"
+no-loop true
     when
         $person : Person(monthlySalary < totalPayments)
-        $results : Results()
+        $results : Results(ableToPayBills == true)
     then
         modify($results){ setAbleToPayBills(false) };
+        log.debug("rule 10");
 end
 
 rule "11: Klient wypłacalny"
+no-loop true
     when
         $person : Person(monthlySalary >= totalPayments)
-        $results : Results()
+        $results : Results(ableToPayBills == false)
     then
         modify($results){ setAbleToPayBills(true) };
+        log.debug("rule 11");
 end
 
 rule "12: Klient z małżonkiem nie wypłacalni"
+no-loop true
     when
         $person : Person(monthlySalary + partnerMonthlySalary < totalPayments)
-        $results : Results()
+        $results : Results(ableToPayBills == true)
     then
         modify($results){ setAbleToPayBills(false) };
+        log.debug("rule 12");
 end
 
 rule "13: Klient z małżonkiem wypłacalni"
+no-loop true
     when
         $person : Person(monthlySalary + partnerMonthlySalary >= totalPayments)
-        $results : Results()
+        $results : Results(ableToPayBills == false)
     then
         modify($results){ setAbleToPayBills(true) };
+        log.debug("rule 13");
 end
 
 rule "14: Klient nie jest w stanie sam opłacać rat"
+no-loop true
     when
         $person : Person(monthlySalary < (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $results : Results()
+        $results : Results(ableToPayInstallments == true)
     then
         modify($results){ setAbleToPayInstallments(false) };
+        log.debug("rule 14");
 end
 
 rule "15: Klient jest w stanie sam opłacać rat"
+no-loop true
     when
         $person : Person(monthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $results : Results()
+        $results : Results(ableToPayInstallments == true)
     then
         modify($results){ setAbleToPayInstallments(false) };
+        log.debug("rule 15");
 end
 
 rule "16: Klient z małżonkiem nie jest w stanie opłacać rat"
+no-loop true
     when
         $person : Person(married == true, monthlySalary + partnerMonthlySalary < (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $results : Results()
+        $results : Results(ableToPayInstallmentsWithPartner == true)
     then
         modify($results){ setAbleToPayInstallmentsWithPartner(false) };
+        log.debug("rule 16");
 end
 
 rule "17: Klient z małżonkiem jest w stanie opłacać rat"
+no-loop true
     when
         $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $results : Results()
+        $results : Results(ableToPayInstallmentsWithPartner == true)
     then
         modify($results){ setAbleToPayInstallmentsWithPartner(false) };
+        log.debug("rule 17");
 end
