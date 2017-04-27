@@ -19,7 +19,6 @@
     <c:url value="/css/main.css" var="jstlCss"/>
     <link href="${jstlCss}" rel="stylesheet"/>
 
-    <script type="text/javascript">var baseUrl = "${pageContext.request.contextPath}"</script>
     <script type="text/javascript" src="webjars/jquery/3.2.0/jquery.min.js"></script>
     <script type="text/javascript" src="webjars/jquery-ui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -52,7 +51,7 @@
             <h2>Kredyt:</h2>
             <div class="form-group">
                 <f:label path="loan.price" data-question="kwota-kredytu"/>
-                <f:input path="loan.price" cssClass="form-control"/>
+                <f:input path="loan.price" cssClass="form-control" required="true" />
             </div>
             <div class="form-group">
                 <f:label path="loan.currency" data-question="waluta"/>
@@ -61,21 +60,21 @@
             </div>
             <div class="form-group">
                 <f:label path="loan.period" data-question="okres-kredytu"/>
-                <f:input path="loan.period" cssClass="form-control"/>
+                <f:input path="loan.period" cssClass="form-control" required="true" />
             </div>
             <div class="form-group">
                 <f:label path="loan.percentage" data-question="oprocentowanie"/>
-                <f:input path="loan.percentage" cssClass="form-control"/>
+                <f:input path="loan.percentage" cssClass="form-control" required="true" />
             </div>
 
             <h2>Inne comiesiączne płatności:</h2>
             <div class="form-group">
                 <f:label path="bills.estate" data-question="mieszkanie-oplata"/>
-                <f:input path="bills.estate" cssClass="form-control"/>
+                <f:input path="bills.estate" cssClass="form-control" />
             </div>
             <div class="form-group">
                 <f:label path="bills.living" data-question="koszt-utrzymania"/>
-                <f:input path="bills.living" cssClass="form-control"/>
+                <f:input path="bills.living" cssClass="form-control" />
             </div>
             <div class="form-group">
                 <f:label path="bills.insurance" data-question="skladki-ubezbieczeniowe"/>
@@ -106,7 +105,7 @@
             </div>
             <div class="form-group">
                 <f:label path="birthDay" data-question="data-urodzenia"/>
-                <f:input path="birthDay" cssClass="form-control date-picker"/>
+                <f:input path="birthDay" cssClass="form-control date-picker" required="true"/>
             </div>
             <div class="form-group">
                 <f:label path="monthlySalary" data-question="pensja"/>
@@ -115,7 +114,6 @@
             <div class="form-group">
                 <f:label path="married" data-question="stan-cywilny"/>
                 <f:select path="married" cssClass="form-control">
-                    <f:option value="">  --Wybierz-- </f:option>
                     <%--@elvariable id="civilStates" type="java.util.List"--%>
                     <f:options items="${civilStates}" itemLabel="key" itemValue="value"/>
                 </f:select>
@@ -130,7 +128,7 @@
             </div>
             <div class="form-group">
                 <f:label path="children" data-question="dzieci"/>
-                <f:input path="children" cssClass="form-control" type="number" min="0"/>
+                <f:input path="children" cssClass="form-control" type="number" min="0" required="true"/>
             </div>
             <div id="childrenBirthDays-section" class="form-group">
                 <f:label path="childrenBirthDays" data-question="data-uredzenia-dziecka"/>

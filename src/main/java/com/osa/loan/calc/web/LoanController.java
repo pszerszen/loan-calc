@@ -5,6 +5,7 @@ import com.osa.loan.calc.model.LoanCurrency;
 import com.osa.loan.calc.model.Person;
 import com.osa.loan.calc.model.Verdict;
 import com.osa.loan.calc.service.LoanService;
+import com.osa.loan.calc.service.PersonPreprocessor;
 import com.osa.loan.calc.service.Questions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.tuple.ImmutablePair.of;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -32,6 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class LoanController {
 
     private final Questions questions;
+    private final PersonPreprocessor preprocessor;
     private final LoanService loanService;
 
     @ModelAttribute("civilStates")
@@ -46,7 +48,7 @@ public class LoanController {
 
     @ModelAttribute("currencies")
     public List<LoanCurrency> getCurrencies() {
-        return Arrays.stream(LoanCurrency.values()).collect(Collectors.toList());
+        return Arrays.stream(LoanCurrency.values()).collect(toList());
     }
 
     @RequestMapping("/")
@@ -63,6 +65,7 @@ public class LoanController {
     @ResponseBody
     @RequestMapping(path = "/count", method = POST)
     public Verdict checkCreditworthiness(@ModelAttribute Person person) {
+        preprocessor.preprocessPerson(person);
         Verdict verdict = loanService.checkCreditworthiness(person);
         log.debug("Verdict: {}", verdict);
         return verdict;

@@ -136,7 +136,7 @@ rule "30: Małżoka klienta nie będzie w stanie spłacić wszystkie raty"
 no-loop true
 salience 86
     when
-        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < loan.period)
+        $person : Person(married == true, utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) < loan.period)
         $loan : Loan(period > 0) from $person.loan
         $results : Results(willClientsPartnerLiveLongEnough == true)
     then
@@ -147,7 +147,7 @@ rule "31: Małżoka klienta będzie w stanie spłacić wszystkie raty"
 no-loop true
 salience 86
     when
-        $person : Person(utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= loan.period)
+        $person : Person(married == true, utils.getNumberOfInstallmentsThatCouldBePaid(partnerBirthDay, !man) >= loan.period)
         $loan : Loan(period > 0) from $person.loan
         $results : Results(willClientsPartnerLiveLongEnough == false)
     then

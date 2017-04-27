@@ -44,7 +44,8 @@ public class Utils {
      * @return monthly installment
      */
     public double countMonthlyLoanInstallment(Loan loan) {
-        double q = 1 + loan.getPercentage() / INSTALLMENT_COUNT_PER_CAPITALISATION;
+        double percentage = loan.getPercentage() / 100;
+        double q = 1 + percentage / INSTALLMENT_COUNT_PER_CAPITALISATION;
 
         return loan.getPrice() * pow(q, loan.getPeriod()) * (q - 1) / pow(q, loan.getPeriod() - 1);
     }
@@ -52,7 +53,7 @@ public class Utils {
     public double getAgeInYears(LocalDate birthDay) {
         Period lifePeriod = Period.between(birthDay, now());
 
-        return (lifePeriod.getYears() * MONTHS_IN_YEAR) + lifePeriod.getMonths();
+        return lifePeriod.getYears() + (lifePeriod.getMonths() / MONTHS_IN_YEAR);
     }
 
     public boolean childWillBeAbleToCarryOn(LocalDate birthday, boolean isMan, LocalDate childBirthday) {

@@ -155,9 +155,9 @@ salience 96
     when
         $person : Person(monthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $results : Results(ableToPayInstallments == true)
+        $results : Results(ableToPayInstallments == false)
     then
-        modify($results){ setAbleToPayInstallments(false) };
+        modify($results){ setAbleToPayInstallments(true) };
 end
 
 rule "16: Klient z małżonkiem nie jest w stanie opłacać rat"
@@ -177,7 +177,7 @@ salience 95
     when
         $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
-        $results : Results(ableToPayInstallmentsWithPartner == true)
+        $results : Results(ableToPayInstallmentsWithPartner == false)
     then
-        modify($results){ setAbleToPayInstallmentsWithPartner(false) };
+        modify($results){ setAbleToPayInstallmentsWithPartner(true) };
 end
