@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.kie.internal.KnowledgeBase;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -18,12 +19,14 @@ public class LoanService {
 
     private final Utils utils;
     private final KnowledgeBase knowledgeBase;
-    private final TrackingAgendaEventListener trackingAgendaEventListener;
+    private final ApplicationContext context;
 
     public synchronized Verdict checkCreditworthiness(Person person) {
         StatefulKnowledgeSession session = knowledgeBase.newStatefulKnowledgeSession();
         try {
-            session.addEventListener(trackingAgendaEventListener);
+            TrackingAgendaEventListener eventListener = getEventListener();
+
+            session.addEventListener(eventListener);
             Loan loan = person.getLoan();
             loan.setMonthlyLoanInstallment(utils.countMonthlyLoanInstallment(loan));
             session.insert(person);
@@ -36,11 +39,17 @@ public class LoanService {
             log.debug("Running rules");
             session.fireAllRules();
 
-            return (Verdict) session.getGlobal("verdict");
+            Verdict verdict = (Verdict) session.getGlobal("verdict");
+            verdict.setRulesLog(eventListener.getLogList());
+            return verdict;
         } finally {
             log.debug("Drools finished.");
             session.destroy();
             log.debug("Session destroyed.");
         }
+    }
+
+    private TrackingAgendaEventListener getEventListener() {
+        return context.getBean(TrackingAgendaEventListener.class);
     }
 }
