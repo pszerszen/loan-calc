@@ -4,6 +4,7 @@ var Main = (function (out, $){
     var $childrenBirthDaysPrototype = $('#childrenBirthDays-prototype');
     var $childrenBirthDaysSection = $('#childrenBirthDays-section');
     var $form = $('form');
+    var $verdict = $('#verdict');
     
     var triggers = {
         '#married': {
@@ -49,21 +50,27 @@ var Main = (function (out, $){
                 enableDatePicker($childrenBirthDaysSection.find('.date-picker'));
             }
         },
-        '#submit' : {
-            'click' : function () {
+        '#submit': {
+            'click': function (){
+                $('#cleanVerdict').click();
                 $.ajax({
                     url: $form.attr('action'),
                     dataType: 'json',
                     type: 'POST',
                     data: $form.serialize(),
                     traditional: true,
-                    success: function (data){
-                        console.log(data);
-                    },
-                    error: function (xhr, status, error){
-                        alert(error)
+                    success: displayVerdict,
+                    error: function (xhr){
+                        alert(xhr.responseJSON.message)
                     }
                 });
+            }
+        },
+        '#cleanVerdict': {
+            'click': function (){
+                $verdict.find('#points').find('li').find('span').text('');
+                $verdict.find('#rules').find('li').not('.active').remove();
+                $verdict.addClass('hidden');
             }
         }
     };
@@ -100,6 +107,24 @@ var Main = (function (out, $){
                     .attr('id', path)
                     .attr('name', path);
             });
+    }
+    
+    function displayVerdict(verdict){
+        var $points = $verdict.find('#points');
+        $points.find('.list-group-item-success').find('span').text(verdict.positives);
+        $points.find('.list-group-item-warning').find('span').text(verdict.warnings);
+        $points.find('.list-group-item-danger').find('span').text(verdict.critical);
+        
+        var $rulesLog = $verdict.find('#rules');
+        $rulesLog.find('li').not('.active').remove();
+        for (var i = 0; i < verdict.rulesLog.length; i++){
+            var $li = $('<li></li>')
+                .addClass('list-group-item')
+                .text(verdict.rulesLog[i]);
+            $rulesLog.append($li);
+        }
+        
+        $verdict.removeClass('hidden');
     }
     
     out.triggers = triggers;

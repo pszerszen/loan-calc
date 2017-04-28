@@ -38,106 +38,134 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container row">
+    <div class="col-md-6">
+        <c:url value="/question" var="questionUrl"/>
+        <input type="hidden" id="questionUrl" value="${questionUrl}"/>
+        <div class="starter-template">
+            <h1>Odpowiedz na pytania:</h1>
+            <c:url value="/count" var="formUrl"/>
+            <%--@elvariable id="person" type="com.osa.loan.calc.model.Person"--%>
+            <f:form modelAttribute="person" method="post" action="${formUrl}">
 
-    <c:url value="/question" var="questionUrl"/>
-    <input type="hidden" id="questionUrl" value="${questionUrl}"/>
-    <div class="starter-template">
-        <h1>Odpowiedz na pytania:</h1>
-        <c:url value="/count" var="formUrl"/>
-        <%--@elvariable id="person" type="com.osa.loan.calc.model.Person"--%>
-        <f:form modelAttribute="person" method="post" action="${formUrl}">
-
-            <h2>Kredyt:</h2>
-            <div class="form-group">
-                <f:label path="loan.price" data-question="kwota-kredytu"/>
-                <f:input path="loan.price" cssClass="form-control" required="true" />
-            </div>
-            <div class="form-group">
-                <f:label path="loan.currency" data-question="waluta"/>
-                <%--@elvariable id="currencies" type="java.util.List"--%>
-                <f:select path="loan.currency" data-question="waluta" items="${currencies}" cssClass="form-control" />
-            </div>
-            <div class="form-group">
-                <f:label path="loan.period" data-question="okres-kredytu"/>
-                <f:input path="loan.period" cssClass="form-control" required="true" />
-            </div>
-            <div class="form-group">
-                <f:label path="loan.percentage" data-question="oprocentowanie"/>
-                <f:input path="loan.percentage" cssClass="form-control" required="true" />
-            </div>
-
-            <h2>Inne comiesiączne płatności:</h2>
-            <div class="form-group">
-                <f:label path="bills.estate" data-question="mieszkanie-oplata"/>
-                <f:input path="bills.estate" cssClass="form-control" />
-            </div>
-            <div class="form-group">
-                <f:label path="bills.living" data-question="koszt-utrzymania"/>
-                <f:input path="bills.living" cssClass="form-control" />
-            </div>
-            <div class="form-group">
-                <f:label path="bills.insurance" data-question="skladki-ubezbieczeniowe"/>
-                <f:input path="bills.insurance" cssClass="form-control"/>
-            </div>
-            <div class="form-group">
-                <f:label path="bills.otherLoans" data-question="inne-kredyty"/>
-                <f:input path="bills.otherLoans" cssClass="form-control"/>
-            </div>
-            <div class="form-group">
-                <f:label path="bills.others" data-question="pozostale-oplaty"/>
-                <f:input path="bills.others" cssClass="form-control"/>
-            </div>
-
-            <h2>Dane osobiste</h2>
-            <div class="form-group">
-                <f:label path="man" data-question="plec"/>
-                <div class="radio">
-                    <label>
-                        <f:radiobutton path="man" value="true"/>Mężczyzna
-                    </label>
+                <h2>Kredyt:</h2>
+                <div class="form-group">
+                    <f:label path="loan.price" data-question="kwota-kredytu"/>
+                    <f:input path="loan.price" cssClass="form-control" required="true"/>
                 </div>
-                <div class="radio">
-                    <label>
-                        <f:radiobutton path="man" value="false"/>Kobieta
-                    </label>
+                <div class="form-group">
+                    <f:label path="loan.currency" data-question="waluta"/>
+                        <%--@elvariable id="currencies" type="java.util.List"--%>
+                    <f:select path="loan.currency" data-question="waluta" items="${currencies}" cssClass="form-control"/>
                 </div>
-            </div>
-            <div class="form-group">
-                <f:label path="birthDay" data-question="data-urodzenia"/>
-                <f:input path="birthDay" cssClass="form-control date-picker" required="true"/>
-            </div>
-            <div class="form-group">
-                <f:label path="monthlySalary" data-question="pensja"/>
-                <f:input path="monthlySalary" cssClass="form-control"/>
-            </div>
-            <div class="form-group">
-                <f:label path="married" data-question="stan-cywilny"/>
-                <f:select path="married" cssClass="form-control">
-                    <%--@elvariable id="civilStates" type="java.util.List"--%>
-                    <f:options items="${civilStates}" itemLabel="key" itemValue="value"/>
-                </f:select>
-            </div>
-            <div class="form-group ifMarried">
-                <f:label path="partnerBirthDay" data-question="data-urodzenia-malzonka"/>
-                <f:input path="partnerBirthDay" cssClass="form-control date-picker"/>
-            </div>
-            <div class="form-group ifMarried">
-                <f:label path="partnerMonthlySalary" data-question="pensja-malzonka"/>
-                <f:input path="partnerMonthlySalary" cssClass="form-control"/>
-            </div>
-            <div class="form-group">
-                <f:label path="children" data-question="dzieci"/>
-                <f:input path="children" cssClass="form-control" type="number" min="0" required="true"/>
-            </div>
-            <div id="childrenBirthDays-section" class="form-group">
-                <f:label path="childrenBirthDays" data-question="data-uredzenia-dziecka"/>
-                <input id="childrenBirthDays-prototype" class="form-control hidden"/>
-            </div>
-            <f:button id="submit" type="button" class="btn btn-success">Analizuj</f:button>
-        </f:form>
+                <div class="form-group">
+                    <f:label path="loan.period" data-question="okres-kredytu"/>
+                    <f:input path="loan.period" cssClass="form-control" required="true"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="loan.percentage" data-question="oprocentowanie"/>
+                    <f:input path="loan.percentage" cssClass="form-control" required="true"/>
+                </div>
+
+                <h2>Inne comiesiączne płatności:</h2>
+                <div class="form-group">
+                    <f:label path="bills.estate" data-question="mieszkanie-oplata"/>
+                    <f:input path="bills.estate" cssClass="form-control"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="bills.living" data-question="koszt-utrzymania"/>
+                    <f:input path="bills.living" cssClass="form-control"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="bills.insurance" data-question="skladki-ubezbieczeniowe"/>
+                    <f:input path="bills.insurance" cssClass="form-control"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="bills.otherLoans" data-question="inne-kredyty"/>
+                    <f:input path="bills.otherLoans" cssClass="form-control"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="bills.others" data-question="pozostale-oplaty"/>
+                    <f:input path="bills.others" cssClass="form-control"/>
+                </div>
+
+                <h2>Dane osobiste</h2>
+                <div class="form-group">
+                    <f:label path="man" data-question="plec"/>
+                    <div class="radio">
+                        <label>
+                            <f:radiobutton path="man" value="true"/>Mężczyzna
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <f:radiobutton path="man" value="false"/>Kobieta
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <f:label path="birthDay" data-question="data-urodzenia"/>
+                    <f:input path="birthDay" cssClass="form-control date-picker" required="true"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="monthlySalary" data-question="pensja"/>
+                    <f:input path="monthlySalary" cssClass="form-control"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="married" data-question="stan-cywilny"/>
+                    <f:select path="married" cssClass="form-control">
+                        <%--@elvariable id="civilStates" type="java.util.List"--%>
+                        <f:options items="${civilStates}" itemLabel="key" itemValue="value"/>
+                    </f:select>
+                </div>
+                <div class="form-group ifMarried">
+                    <f:label path="partnerBirthDay" data-question="data-urodzenia-malzonka"/>
+                    <f:input path="partnerBirthDay" cssClass="form-control date-picker"/>
+                </div>
+                <div class="form-group ifMarried">
+                    <f:label path="partnerMonthlySalary" data-question="pensja-malzonka"/>
+                    <f:input path="partnerMonthlySalary" cssClass="form-control"/>
+                </div>
+                <div class="form-group">
+                    <f:label path="children" data-question="dzieci"/>
+                    <f:input path="children" cssClass="form-control" type="number" min="0" required="true"/>
+                </div>
+                <div id="childrenBirthDays-section" class="form-group">
+                    <f:label path="childrenBirthDays" data-question="data-uredzenia-dziecka"/>
+                    <input id="childrenBirthDays-prototype" class="form-control hidden"/>
+                </div>
+                <f:button id="submit" type="button" class="btn btn-success">Analizuj</f:button>
+            </f:form>
+        </div>
     </div>
 
+    <div class="col-md-6 hidden" id="verdict">
+        <div class="row">
+            <div class="col-md-11">
+                <h1>Wynik analizy:</h1></div>
+            <div class="col-md-1">
+                <button id="cleanVerdict" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+        </div>
+        <ul id="points" class="list-group">
+            <li class="list-group-item list-group-item-success">
+                <span class="badge"></span>
+                Pozytywy
+            </li>
+            <li class="list-group-item list-group-item-warning">
+                <span class="badge"></span>
+                Ostrzeżenia
+            </li>
+            <li class="list-group-item list-group-item-danger">
+                <span class="badge"></span>
+                Negatywy
+            </li>
+        </ul>
+
+        <ul id="rules" class="list-group">
+            <li class="list-group-item active">Uruchomione zasady:</li>
+        </ul>
+    </div>
 </div>
 
 <c:url value="/js/main.js" var="jsUrl"/>
