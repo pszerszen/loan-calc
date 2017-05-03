@@ -1,8 +1,8 @@
 package com.osa.loan.calc.service;
 
-import com.osa.loan.calc.model.Loan;
 import com.osa.loan.calc.model.Person;
 import com.osa.loan.calc.model.Results;
+import com.osa.loan.calc.model.TotalPayments;
 import com.osa.loan.calc.model.Verdict;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +27,18 @@ public class LoanService {
             TrackingAgendaEventListener eventListener = getEventListener();
 
             session.addEventListener(eventListener);
-            Loan loan = person.getLoan();
-            loan.setMonthlyLoanInstallment(utils.countMonthlyLoanInstallment(loan));
             session.insert(person);
             session.insert(new Results());
 
             session.setGlobal("utils", utils);
-            session.setGlobal("totalPayments", 0d);
+            session.setGlobal("totalPayments", new TotalPayments());
             session.setGlobal("verdict", new Verdict());
 
             log.debug("Running rules");
             session.fireAllRules();
 
             Verdict verdict = (Verdict) session.getGlobal("verdict");
+            verdict.setTotalPayments(((TotalPayments) session.getGlobal("totalPayments")).getValue());
             verdict.setRulesLog(eventListener.getLogList());
             return verdict;
         } finally {

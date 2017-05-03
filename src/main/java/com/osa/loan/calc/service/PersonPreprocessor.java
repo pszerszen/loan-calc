@@ -3,17 +3,25 @@ package com.osa.loan.calc.service;
 import com.osa.loan.calc.model.Loan;
 import com.osa.loan.calc.model.MonthlyBills;
 import com.osa.loan.calc.model.Person;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
 @Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PersonPreprocessor {
+
+    private final Utils utils;
 
     public void preprocessPerson(Person person) {
         preprocess(person);
+        Loan loan = person.getLoan();
+        loan.setPrice(loan.getPrice() * loan.getCurrency().getPlnProportion());
+        loan.setMonthlyLoanInstallment(utils.countMonthlyLoanInstallment(loan));
     }
 
     @SneakyThrows

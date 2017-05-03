@@ -5,7 +5,7 @@ import com.osa.loan.calc.service.*;
 
 dialect  "java"
 
-global Double totalPayments;
+global TotalPayments totalPayments;
 global Utils utils;
 
 rule "1: Opłaty za mieszkanie."
@@ -15,37 +15,37 @@ salience 100
         $person :Person()
         $bills : MonthlyBills(estate > 0) from $person.bills
     then
-        totalPayments += $bills.getEstate();
+        totalPayments.addPayment($bills.getEstate());
 end
 
 rule "2: Koszty utrzymania."
 no-loop true
-salience 100
+salience 103
     when
         $person :Person()
         $bills : MonthlyBills(living > 0) from $person.bills
     then
-        totalPayments += $bills.getLiving();
+        totalPayments.addPayment($bills.getLiving());
 end
 
 rule "3: Składki ubezpieczeniowe."
 no-loop true
-salience 100
+salience 102
     when
         $person :Person()
         $bills : MonthlyBills(insurance > 0) from $person.bills
     then
-        totalPayments += $bills.getInsurance();
+        totalPayments.addPayment($bills.getInsurance());
 end
 
 rule "4: Inne kredyty."
 no-loop true
-salience 100
+salience 101
     when
         $person :Person()
         $bills : MonthlyBills(otherLoans > 0) from $person.bills
     then
-        totalPayments += $bills.getOtherLoans();
+        totalPayments.addPayment($bills.getOtherLoans());
 end
 
 rule "5: Pozostałe koszta."
@@ -55,7 +55,7 @@ salience 100
         $person :Person()
         $bills : MonthlyBills(others > 0) from $person.bills
     then
-        totalPayments += $bills.getOthers();
+        totalPayments.addPayment($bills.getOthers());
 end
 
 rule "6: Klient pracujący"
@@ -102,7 +102,7 @@ rule "10: Klient nie wypłacalny"
 no-loop true
 salience 98
     when
-        $person : Person(monthlySalary < totalPayments)
+        $person : Person(monthlySalary < bills.totalPayments)
         $results : Results(ableToPayBills == true)
     then
         modify($results){ setAbleToPayBills(false) };
@@ -112,7 +112,7 @@ rule "11: Klient wypłacalny"
 no-loop true
 salience 98
     when
-        $person : Person(monthlySalary >= totalPayments)
+        $person : Person(monthlySalary >= bills.totalPayments)
         $results : Results(ableToPayBills == false)
     then
         modify($results){ setAbleToPayBills(true) };
@@ -122,7 +122,7 @@ rule "12: Klient z małżonkiem nie wypłacalni"
 no-loop true
 salience 97
     when
-        $person : Person(monthlySalary + partnerMonthlySalary < totalPayments)
+        $person : Person(monthlySalary + partnerMonthlySalary < bills.totalPayments)
         $results : Results(ableToPayBills == true)
     then
         modify($results){ setAbleToPayBills(false) };
@@ -132,7 +132,7 @@ rule "13: Klient z małżonkiem wypłacalni"
 no-loop true
 salience 97
     when
-        $person : Person(monthlySalary + partnerMonthlySalary >= totalPayments)
+        $person : Person(monthlySalary + partnerMonthlySalary >= bills.totalPayments)
         $results : Results(ableToPayBills == false)
     then
         modify($results){ setAbleToPayBills(true) };
@@ -142,18 +142,18 @@ rule "14: Klient nie jest w stanie sam opłacać rat"
 no-loop true
 salience 96
     when
-        $person : Person(monthlySalary < (totalPayments + loan.monthlyLoanInstallment))
+        $person : Person(monthlySalary < (bills.totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
         $results : Results(ableToPayInstallments == true)
     then
         modify($results){ setAbleToPayInstallments(false) };
 end
 
-rule "15: Klient jest w stanie sam opłacać rat"
+rule "15: Klient jest w stanie sam opłacać raty"
 no-loop true
 salience 96
     when
-        $person : Person(monthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
+        $person : Person(monthlySalary >= (bills.totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
         $results : Results(ableToPayInstallments == false)
     then
@@ -164,7 +164,7 @@ rule "16: Klient z małżonkiem nie jest w stanie opłacać rat"
 no-loop true
 salience 95
     when
-        $person : Person(married == true, monthlySalary + partnerMonthlySalary < (totalPayments + loan.monthlyLoanInstallment))
+        $person : Person(married == true, monthlySalary + partnerMonthlySalary < (bills.totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
         $results : Results(ableToPayInstallmentsWithPartner == true)
     then
@@ -175,7 +175,7 @@ rule "17: Klient z małżonkiem jest w stanie opłacać rat"
 no-loop true
 salience 95
     when
-        $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (totalPayments + loan.monthlyLoanInstallment))
+        $person : Person(married == true, monthlySalary + partnerMonthlySalary >= (bills.totalPayments + loan.monthlyLoanInstallment))
         $loan : Loan(monthlyLoanInstallment > 0) from $person.loan
         $results : Results(ableToPayInstallmentsWithPartner == false)
     then
