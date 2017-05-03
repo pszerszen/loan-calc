@@ -20,7 +20,7 @@ end
 
 rule "2: Koszty utrzymania."
 no-loop true
-salience 103
+salience 100
     when
         $person :Person()
         $bills : MonthlyBills(living > 0) from $person.bills
@@ -30,7 +30,7 @@ end
 
 rule "3: Składki ubezpieczeniowe."
 no-loop true
-salience 102
+salience 100
     when
         $person :Person()
         $bills : MonthlyBills(insurance > 0) from $person.bills
@@ -40,7 +40,7 @@ end
 
 rule "4: Inne kredyty."
 no-loop true
-salience 101
+salience 100
     when
         $person :Person()
         $bills : MonthlyBills(otherLoans > 0) from $person.bills
